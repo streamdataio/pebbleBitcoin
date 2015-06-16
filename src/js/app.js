@@ -10,55 +10,3019 @@
 /* END include jsonpatch
 /**********************************************************************************************/
 /* INCLUDE STEAMDATA.IO */
-var CryptoJS=CryptoJS||function(a,d){var b={},e=b.lib={},c=e.Base=function(){function a(){}return{extend:function(b){a.prototype=this;var c=new a;b&&c.mixIn(b);c.hasOwnProperty("init")||(c.init=function(){c.$super.init.apply(this,arguments)});c.init.prototype=c;c.$super=this;return c},create:function(){var a=this.extend();a.init.apply(a,arguments);return a},init:function(){},mixIn:function(a){for(var b in a)a.hasOwnProperty(b)&&(this[b]=a[b]);a.hasOwnProperty("toString")&&(this.toString=a.toString)},
-clone:function(){return this.init.prototype.extend(this)}}}(),k=e.WordArray=c.extend({init:function(a,b){a=this.h=a||[];b!=d?this.f=b:this.f=4*a.length},toString:function(a){return(a||g).stringify(this)},concat:function(a){var b=this.h,c=a.h,d=this.f;a=a.f;this.clamp();if(d%4)for(var e=0;e<a;e++)b[d+e>>>2]|=(c[e>>>2]>>>24-e%4*8&255)<<24-(d+e)%4*8;else if(65535<c.length)for(e=0;e<a;e+=4)b[d+e>>>2]=c[e>>>2];else b.push.apply(b,c);this.f+=a;return this},clamp:function(){var b=this.h,c=this.f;b[c>>>2]&=
-    4294967295<<32-c%4*8;b.length=a.ceil(c/4)},clone:function(){var a=c.clone.call(this);a.h=this.h.slice(0);return a},random:function(b){for(var c=[],e=0;e<b;e+=4)c.push(4294967296*a.random()|0);return new k.init(c,b)}}),f=b.enc={},g=f.Hex={stringify:function(a){var b=a.h;a=a.f;for(var c=[],e=0;e<a;e++){var d=b[e>>>2]>>>24-e%4*8&255;c.push((d>>>4).toString(16));c.push((d&15).toString(16))}return c.join("")},parse:function(a){for(var b=a.length,c=[],e=0;e<b;e+=2)c[e>>>3]|=parseInt(a.substr(e,2),16)<<
-    24-e%8*4;return new k.init(c,b/2)}},t=f.Latin1={stringify:function(a){var b=a.h;a=a.f;for(var c=[],e=0;e<a;e++)c.push(String.fromCharCode(b[e>>>2]>>>24-e%4*8&255));return c.join("")},parse:function(a){for(var b=a.length,c=[],e=0;e<b;e++)c[e>>>2]|=(a.charCodeAt(e)&255)<<24-e%4*8;return new k.init(c,b)}},B=f.Utf8={stringify:function(a){try{return decodeURIComponent(escape(t.stringify(a)))}catch(b){throw Error("Malformed UTF-8 data");}},parse:function(a){return t.parse(unescape(encodeURIComponent(a)))}},
-    R=e.BufferedBlockAlgorithm=c.extend({reset:function(){this.j=new k.init;this.F=0},_append:function(a){"string"==typeof a&&(a=B.parse(a));this.j.concat(a);this.F+=a.f},_process:function(b){var c=this.j,e=c.h,d=c.f,f=this.blockSize,g=d/(4*f),g=b?a.ceil(g):a.max((g|0)-this._minBufferSize,0);b=g*f;d=a.min(4*b,d);if(b){for(var E=0;E<b;E+=f)this._doProcessBlock(e,E);E=e.splice(0,b);c.f-=d}return new k.init(E,d)},clone:function(){var a=c.clone.call(this);a.j=this.j.clone();return a},_minBufferSize:0});e.Hasher=
-    R.extend({cfg:c.extend(),init:function(a){this.cfg=this.cfg.extend(a);this.reset()},reset:function(){R.reset.call(this);this._doReset()},update:function(a){this._append(a);this._process();return this},finalize:function(a){a&&this._append(a);return this._doFinalize()},blockSize:16,_createHelper:function(a){return function(b,c){return(new a.init(c)).finalize(b)}},_createHmacHelper:function(a){return function(b,c){return(new ja.HMAC.init(a,c)).finalize(b)}}});var ja=b.algo={};return b}(Math);
-    (function(a){var d=CryptoJS.lib,b=d.Base,e=d.WordArray,d=CryptoJS.x64={};d.Word=b.extend({init:function(a,b){this.b=a;this.c=b}});d.WordArray=b.extend({init:function(b,e){b=this.h=b||[];e!=a?this.f=e:this.f=8*b.length},toX32:function(){for(var a=this.h,b=a.length,d=[],g=0;g<b;g++){var t=a[g];d.push(t.b);d.push(t.c)}return e.create(d,this.f)},clone:function(){for(var a=b.clone.call(this),e=a.h=this.h.slice(0),d=e.length,g=0;g<d;g++)e[g]=e[g].clone();return a}})})();
-    (function(){var a=CryptoJS.enc.Utf8;CryptoJS.algo.HMAC=CryptoJS.lib.Base.extend({init:function(d,b){d=this.C=new d.init;"string"==typeof b&&(b=a.parse(b));var e=d.blockSize,c=4*e;b.f>c&&(b=d.finalize(b));b.clamp();for(var k=this.ea=b.clone(),f=this.da=b.clone(),g=k.h,t=f.h,B=0;B<e;B++)g[B]^=1549556828,t[B]^=909522486;k.f=f.f=c;this.reset()},reset:function(){var a=this.C;a.reset();a.update(this.da)},update:function(a){this.C.update(a);return this},finalize:function(a){var b=this.C;a=b.finalize(a);
-        b.reset();return b.finalize(this.ea.clone().concat(a))}})})();
-        (function(){function a(){return e.create.apply(e,arguments)}var d=CryptoJS.lib.Hasher,b=CryptoJS.x64,e=b.Word,c=b.WordArray,b=CryptoJS.algo,k=[a(1116352408,3609767458),a(1899447441,602891725),a(3049323471,3964484399),a(3921009573,2173295548),a(961987163,4081628472),a(1508970993,3053834265),a(2453635748,2937671579),a(2870763221,3664609560),a(3624381080,2734883394),a(310598401,1164996542),a(607225278,1323610764),a(1426881987,3590304994),a(1925078388,4068182383),a(2162078206,991336113),a(2614888103,
-            633803317),a(3248222580,3479774868),a(3835390401,2666613458),a(4022224774,944711139),a(264347078,2341262773),a(604807628,2007800933),a(770255983,1495990901),a(1249150122,1856431235),a(1555081692,3175218132),a(1996064986,2198950837),a(2554220882,3999719339),a(2821834349,766784016),a(2952996808,2566594879),a(3210313671,3203337956),a(3336571891,1034457026),a(3584528711,2466948901),a(113926993,3758326383),a(338241895,168717936),a(666307205,1188179964),a(773529912,1546045734),a(1294757372,1522805485),
-        a(1396182291,2643833823),a(1695183700,2343527390),a(1986661051,1014477480),a(2177026350,1206759142),a(2456956037,344077627),a(2730485921,1290863460),a(2820302411,3158454273),a(3259730800,3505952657),a(3345764771,106217008),a(3516065817,3606008344),a(3600352804,1432725776),a(4094571909,1467031594),a(275423344,851169720),a(430227734,3100823752),a(506948616,1363258195),a(659060556,3750685593),a(883997877,3785050280),a(958139571,3318307427),a(1322822218,3812723403),a(1537002063,2003034995),a(1747873779,
-            3602036899),a(1955562222,1575990012),a(2024104815,1125592928),a(2227730452,2716904306),a(2361852424,442776044),a(2428436474,593698344),a(2756734187,3733110249),a(3204031479,2999351573),a(3329325298,3815920427),a(3391569614,3928383900),a(3515267271,566280711),a(3940187606,3454069534),a(4118630271,4000239992),a(116418474,1914138554),a(174292421,2731055270),a(289380356,3203993006),a(460393269,320620315),a(685471733,587496836),a(852142971,1086792851),a(1017036298,365543100),a(1126000580,2618297676),a(1288033470,
-            3409855158),a(1501505948,4234509866),a(1607167915,987167468),a(1816402316,1246189591)],f=[];(function(){for(var b=0;80>b;b++)f[b]=a()})();b=b.SHA512=d.extend({_doReset:function(){this.u=new c.init([new e.init(1779033703,4089235720),new e.init(3144134277,2227873595),new e.init(1013904242,4271175723),new e.init(2773480762,1595750129),new e.init(1359893119,2917565137),new e.init(2600822924,725511199),new e.init(528734635,4215389547),new e.init(1541459225,327033209)])},_doProcessBlock:function(a,b){for(var c=
-                this.u.h,e=c[0],d=c[1],S=c[2],N=c[3],Y=c[4],ba=c[5],ia=c[6],c=c[7],ea=e.b,E=e.c,x=d.b,ka=d.c,na=S.b,Z=S.c,oa=N.b,K=N.c,T=Y.b,U=Y.c,C=ba.b,F=ba.c,V=ia.b,n=ia.c,w=c.b,O=c.c,z=ea,p=E,L=x,M=ka,H=na,G=Z,y=oa,D=K,u=T,I=U,ca=C,fa=F,la=V,ga=n,A=w,ha=O,q=0;80>q;q++){var W=f[q];if(16>q)var J=W.b=a[b+2*q]|0,l=W.c=a[b+2*q+1]|0;else{var J=f[q-15],l=J.b,P=J.c,J=(l>>>1|P<<31)^(l>>>8|P<<24)^l>>>7,P=(P>>>1|l<<31)^(P>>>8|l<<24)^(P>>>7|l<<25),aa=f[q-2],l=aa.b,r=aa.c,aa=(l>>>19|r<<13)^(l<<3|r>>>29)^l>>>6,r=(r>>>19|l<<
-                    13)^(r<<3|l>>>29)^(r>>>6|l<<26),l=f[q-7],ma=l.b,X=f[q-16],Q=X.b,X=X.c,l=P+l.c,J=J+ma+(l>>>0<P>>>0?1:0),l=l+r,J=J+aa+(l>>>0<r>>>0?1:0),l=l+X,J=J+Q+(l>>>0<X>>>0?1:0);W.b=J;W.c=l}var ma=u&ca^~u&la,X=I&fa^~I&ga,W=z&L^z&H^L&H,qa=p&M^p&G^M&G,P=(z>>>28|p<<4)^(z<<30|p>>>2)^(z<<25|p>>>7),aa=(p>>>28|z<<4)^(p<<30|z>>>2)^(p<<25|z>>>7),r=k[q],ra=r.b,pa=r.c,r=ha+((I>>>14|u<<18)^(I>>>18|u<<14)^(I<<23|u>>>9)),Q=A+((u>>>14|I<<18)^(u>>>18|I<<14)^(u<<23|I>>>9))+(r>>>0<ha>>>0?1:0),r=r+X,Q=Q+ma+(r>>>0<X>>>0?1:0),r=r+
-                pa,Q=Q+ra+(r>>>0<pa>>>0?1:0),r=r+l,Q=Q+J+(r>>>0<l>>>0?1:0),l=aa+qa,W=P+W+(l>>>0<aa>>>0?1:0),A=la,ha=ga,la=ca,ga=fa,ca=u,fa=I,I=D+r|0,u=y+Q+(I>>>0<D>>>0?1:0)|0,y=H,D=G,H=L,G=M,L=z,M=p,p=r+l|0,z=Q+W+(p>>>0<r>>>0?1:0)|0}E=e.c=E+p;e.b=ea+z+(E>>>0<p>>>0?1:0);ka=d.c=ka+M;d.b=x+L+(ka>>>0<M>>>0?1:0);Z=S.c=Z+G;S.b=na+H+(Z>>>0<G>>>0?1:0);K=N.c=K+D;N.b=oa+y+(K>>>0<D>>>0?1:0);U=Y.c=U+I;Y.b=T+u+(U>>>0<I>>>0?1:0);F=ba.c=F+fa;ba.b=C+ca+(F>>>0<fa>>>0?1:0);n=ia.c=n+ga;ia.b=V+la+(n>>>0<ga>>>0?1:0);O=c.c=O+ha;c.b=w+
-                A+(O>>>0<ha>>>0?1:0)},_doFinalize:function(){var a=this.j,b=a.h,c=8*this.F,e=8*a.f;b[e>>>5]|=128<<24-e%32;b[(e+128>>>10<<5)+30]=Math.floor(c/4294967296);b[(e+128>>>10<<5)+31]=c;a.f=4*b.length;this._process();return this.u.toX32()},clone:function(){var a=d.clone.call(this);a.u=this.u.clone();return a},blockSize:32});CryptoJS.SHA512=d._createHelper(b);CryptoJS.HmacSHA512=d._createHmacHelper(b)})();
-                (function(){var a=CryptoJS.lib.WordArray;CryptoJS.enc.Base64={stringify:function(a){var b=a.h,e=a.f,c=this._map;a.clamp();a=[];for(var k=0;k<e;k+=3)for(var f=(b[k>>>2]>>>24-k%4*8&255)<<16|(b[k+1>>>2]>>>24-(k+1)%4*8&255)<<8|b[k+2>>>2]>>>24-(k+2)%4*8&255,g=0;4>g&&k+.75*g<e;g++)a.push(c.charAt(f>>>6*(3-g)&63));if(b=c.charAt(64))for(;a.length%4;)a.push(b);return a.join("")},parse:function(d){var b=d.length,e=this._map,c=e.charAt(64);c&&(c=d.indexOf(c),-1!=c&&(b=c));for(var c=[],k=0,f=0;f<b;f++)f%4&&(c[k>>>
-                    2]|=(e.indexOf(d.charAt(f-1))<<f%4*2|e.indexOf(d.charAt(f))>>>6-f%4*2)<<24-k%4*8,k++);return a.create(c,k)},_map:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="}})();
-                    (function(a){function d(){this.data={}}function b(){this.L=new d}function e(a){setTimeout(function(){throw a;},0)}function c(a){this.type=a;this.target=void 0}function k(a,b){c.call(this,a);this.data=b.data;this.lastEventId=b.lastEventId}function f(a,b){var c=a;c!==c&&(c=b);return 1E3>c?1E3:18E6<c?18E6:c}function g(a,b,c){try{"function"===typeof b&&b.call(a,c)}catch(d){e(d)}}function t(b,e){function E(){p=2;void 0!==n&&(n.abort(),n=void 0);0!==w&&(clearTimeout(w),w=0);0!==O&&(clearTimeout(O),O=0);
-                        C.readyState=2}function x(a){var e=1===p||0===p?n.responseText:"",d=void 0,t=!1;if(0===p){var d=0,x="",A=void 0;if(N)try{d=n.status,x=n.statusText,A=n.getResponseHeader("Content-Type")}catch(B){d=0,x="",A=void 0}else""!==a&&"error"!==a&&(d=200,x="OK",A=n.contentType);if(void 0===A||null===A)A="";if(0===d&&""===x&&"load"===a&&""!==e&&(d=200,x="OK",""===A)){var q=/^data\:([^,]*?)(?:;base64)?,[\S]*$/.exec(b);void 0!==q&&null!==q&&(A=q[1])}if(200===d&&ba.test(A)){if(p=1,V=!0,F=K,C.readyState=1,d=new c("open"),
-                            C.dispatchEvent(d),g(C,C.onopen,d),2===p)return}else if(0!==d){var ea="",ea=200!==d?"EventSource's response has a status "+d+" "+x.replace(/\s+/g," ")+" that is not 200. Aborting the connection.":"EventSource's response has a Content-Type specifying an unsupported type: "+A.replace(/\s+/g," ")+". Aborting the connection.";setTimeout(function(){throw Error(ea);},0);t=!0}}if(1===p){e.length>z&&(V=!0);x=z-1;A=e.length;for(q="\n";++x<A;)if(q=e.charAt(x),3===y&&"\n"===q)y=4;else if(3===y&&(y=4),"\r"===
-                            q||"\n"===q){"data"===D?L.push(u):"id"===D?M=u:"event"===D?H=u:"retry"===D?F=K=f(Number(u),K):"heartbeatTimeout"===D&&(T=f(Number(u),T),0!==w&&(clearTimeout(w),w=setTimeout(G,T)));D=u="";if(4===y){if(0!==L.length&&(U=M,""===H&&(H="message"),d=new k(H,{data:L.join("\n"),lastEventId:M}),C.dispatchEvent(d),"message"===H&&g(C,C.onmessage,d),2===p))return;L.length=0;H=""}y="\r"===q?3:4}else 4===y&&(y=5),5===y?":"===q?y=6:D+=q:6===y?(" "!==q&&(u+=q),y=7):7===y&&(u+=q);z=A}1!==p&&0!==p||!("load"===a||"error"===
-                            a||t||1048576<z||0===w&&!V)?0===w&&(V=!1,w=setTimeout(G,T)):(t?E():(p=-1,n.abort(),0!==w&&(clearTimeout(w),w=0),F>16*K&&(F=16*K),18E6<F&&(F=18E6),w=setTimeout(G,F),F=2*F+1,C.readyState=0),d=new c("error"),C.dispatchEvent(d),g(C,C.onerror,d))}function t(){x("progress")}function B(){x("load")}function Z(){x("error")}b=b.toString();var R=S&&void 0!==e&&Boolean(e.withCredentials),K=f(1E3,0),T=f(45E3,0),U="",C=this,F=K,V=!1,n=new Y,w=0,O=0,z=0,p=-1,L=[],M="",H="",G=void 0,y=4,D="",u="";N&&(O=setTimeout(function ca(){3===
-                                n.readyState&&x("progress");O=setTimeout(ca,500)},0));G=function(){w=0;if(-1!==p)x("");else if(!N||void 0===n.wa&&void 0!==n.onloadend||void 0===a.document||void 0===a.document.readyState||"complete"===a.document.readyState){n.onload=B;n.onerror=Z;N&&(n.onabort=Z,n.onreadystatechange=t);n.onprogress=t;V=!1;w=setTimeout(G,T);p=z=0;L.length=0;H="";M=U;D=u="";y=4;var c=b.slice(0,5),c="data:"!==c&&"blob:"!==c?b+((-1===b.indexOf("?",0)?"?":"&")+"lastEventId="+encodeURIComponent(U)+"&r="+(Math.random()+
-                                1).toString().slice(2)):b;n.open("GET",c,!0);N&&(n.withCredentials=R,n.responseType="text",n.setRequestHeader("Accept","text/event-stream"));n.send(void 0)}else w=setTimeout(G,4)};this.L=new d;this.close=E;this.url=b;this.readyState=0;this.withCredentials=R;this.onerror=this.onmessage=this.onopen=void 0;G()}function B(){this.CONNECTING=0;this.OPEN=1;this.CLOSED=2}d.prototype={get:function(a){return this.data[a+"~"]},set:function(a,b){this.data[a+"~"]=b},"delete":function(a){delete this.data[a+"~"]}};
-                                b.prototype={dispatchEvent:function(a){a.target=this;var b=this.L.get(a.type.toString());if(void 0!==b)for(var c=b.length,d=-1,f=void 0;++d<c;){f=b[d];try{f.call(this,a)}catch(k){e(k)}}},addEventListener:function(a,b){a=a.toString();var c=this.L,e=c.get(a);void 0===e&&(e=[],c.set(a,e));for(c=e.length;0<=--c;)if(e[c]===b)return;e.push(b)}};k.prototype=c.prototype;var R=a.XMLHttpRequest,ja=a.XDomainRequest,S=void 0!==R&&void 0!==(new R).withCredentials,N=S,Y=S?R:void 0!==ja?ja:void 0,ba=/^text\/event\-stream;?(\s*charset\=utf\-8)?$/i;
-                                B.prototype=b.prototype;t.prototype=new B;B.call(t);void 0===Y||function(){if(void 0!==a.EventSource)try{var b=new a.EventSource("data:text/event-stream;charset=utf-8,");b.close();return!1===b.withCredentials&&""!==b.url}catch(c){e(c)}return!1}()||(a.va=a.EventSource,a.EventSource=t)})(this);var h={o:function(a,d,b){d=d.split(".");for(var e=0;e<d.length-1;e++)a=a[d[e]];this.a(a,d[d.length-1],b)},a:function(a,d,b){a[d]=b}};var m=function(){function a(a,b){return a.replace(/{(\d+)}/g,function(a,e){var g;if(b[e]&&"object"===typeof b[e]&&b[e]instanceof Error)try{g=b[e].message,b[e].stack&&d.error(b[e].stack)}catch(t){g=b[e]}else if(b[e]&&"object"===typeof b[e])try{b[e].toString!==Object.prototype.toString?g=b[e].toString():g=JSON.stringify(b[e])}catch(B){g=b[e]}else b[e]&&"function"===typeof b[e]?g="function":g=b[e]?b[e]:a;g=""+g;return g.substring(0,Math.min(500,g.length))})}var d=window.console,b=2;return{R:3,S:2,T:1,
-                                    ERROR:0,ua:function(a){b=a},debug:function(){3<=b&&d&&d.log&&d.log(a(arguments[0],Array.prototype.slice.call(arguments,1)))},info:function(){2<=b&&d&&d.info&&d.info(a(arguments[0],Array.prototype.slice.call(arguments,1)))},warn:function(){1<=b&&d&&d.warn&&d.warn(a(arguments[0],Array.prototype.slice.call(arguments,1)))},error:function(){0<=b&&d&&d.error&&d.error(a(arguments[0],Array.prototype.slice.call(arguments,1)))}}}();var SessionStorage;a:{try{SessionStorage=window.sessionStorage;break a}catch(da){}SessionStorage=void 0};var v=function(a){return{g:function(a,b){if("undefined"===typeof a||null===a){if(b)throw Error(b);throw Error("value cannot be null");}return a},J:function(d,b){this.g(d,"functionName cannot be null");this.g(b,"message cannot be null");a.warn("Deprecated: function '{0}' is deprecated because '{1}'.",d,b)},O:function(a,b){if(!a){if(b)throw Error(b);throw Error("expression is not valid");}},o:function(a,b){if(!a){if(b)throw Error(b);throw Error("expression is not valid");}}}}(m);function sa(a){v.g(a,"bind cannot be null");this.U=a;this.m=[]}sa.prototype={s:function(){for(var a=this.m.slice(),d=0,b=a.length;d<b;d++)try{var e=a[d];e&&e.apply(this.U,arguments)}catch(c){m.error("Unable to forward event: {0}",c)}},add:function(a){v.g(a,"listener cannot be null");v.O(-1==this.m.indexOf(a),"listener already exists");this.m.push(a)},remove:function(a){v.g(a,"listener cannot be null");a=this.m.indexOf(a);v.O(0<=a,"listener not exists");this.m.splice(a,1)}};function StreamdataEventSource(a,d){v.g(a,"url cannot be null.");d=d||[];var b=this;b.streamdataConfig={PROTOCOL:"https://",HOST:"streamdata.motwin.net",PORT:""};b.keyFile="/streamdataio.json";b.i=null;b.l=!1;b.I=a;b.G=new sa(b);b.w=new sa(b);b.H=new sa(b);b.A=new sa(b);b.D=new sa(b);b.v=!1;b.ca=d;b.M={type:"UnknownError",status:1E3,message:"An error occurs. Please check your console logs for more details.",source:"server"};b.open=function(){v.g(b.I,"url cannot be null");b.close();var a=b.Z(b.I,b.ca);
-                                    a&&(b.i=new EventSource(a),b.i.addEventListener("open",function(a){m.debug("SSE Stream Opened to "+b.I+"event: "+JSON.stringify(a));b.l=!0;b.G.s()}),b.i.addEventListener("error",function(a){m.debug("Error with SSE at "+a+": closing the stream.");b.i.close();b.l=!1;b.A.s(b.W(a))}),b.i.addEventListener("data",function(a){m.debug("Received data:"+a.data);b.w.s(JSON.parse(a.data))}),b.i.addEventListener("patch",function(a){m.debug("Received patch:"+a.data);b.H.s(JSON.parse(a.data))}),b.i.addEventListener("monitor",
-                                        function(a){m.debug("Received monitor:"+a.data);b.D.s(JSON.parse(a.data))}));return this};b.close=function(){b.l&&null!==b.i&&(m.info("Closing the SSE Stream."),b.i.close(),b.l=!1);return this};b.ga=function(){var a=null;b.v=!1;var c=b.ba();if(c)try{a=JSON.parse(c)}catch(d){}if(!a)try{var f=b.aa(b.keyFile);f&&(a=JSON.parse(f))}catch(g){}a||b.K(streamdataio.pk)||b.K(streamdataio.Pk)||(a={Pk:"",pk:""},a.pk=streamdataio.pk,a.Pk=streamdataio.Pk);return b.$(a)};b.$=function(a){var c=["","",""];if(a)try{var d=
-                                        CryptoJS.enc.Base64.parse(a.pk),f=CryptoJS.enc.Utf8.stringify(d);72==f.length&&(b.v=!0,b.ha(JSON.stringify(a)),c=[f.substring(0,36),f.substring(36),a.Pk])}catch(g){b.fa()}return c};b.Z=function(a,c){v.g(a,"url cannot be null");c=c||[];var d=document.createElement("a");d.href=a;var f="",g=/\/\/(.*@)/g.exec(a),g=g?g=g[1]:"",g=d.protocol+"//"+g+d.host+d.pathname+d.search,t=b.Y(g,c);0<t.length&&(f=(-1===d.search.indexOf("?")?"?":"&")+t.join("&"));d=b.streamdataConfig.PROTOCOL+b.streamdataConfig.HOST+
-                                        (b.K(b.streamdataConfig.PORT)?"":":")+b.streamdataConfig.PORT+"/"+g+f;m.debug("converted url :"+d);return d};b.Y=function(a,c){c=c||[];var d=b.X(c),f=b.V(a);return d.concat(f)};b.V=function(a){var c=[],d=b.ga();if(b.v){var f=""+Date.now();a=CryptoJS.HmacSHA512("GET\n"+f+"\n"+a+"\n",d[1]);a=CryptoJS.enc.Base64.stringify(a);a=CryptoJS.enc.Utf8.parse(d[0]+a);a=CryptoJS.enc.Base64.stringify(a);c.push("X-Auth-Sd-Pk="+encodeURIComponent(d[2]));c.push("X-Auth-Sd-Ts="+encodeURIComponent(f));c.push("X-Auth-Sd-S="+
-                                          encodeURIComponent(a))}return c};b.X=function(a){a=a||[];return a.map(function(a){return"X-Sd-Header="+encodeURIComponent(a)})};b.ba=function(){return SessionStorage&&streamdataio.sessionStore?SessionStorage.getItem(b.B()):null};b.ha=function(a){SessionStorage&&streamdataio.sessionStore&&SessionStorage.setItem(b.B(),a)};b.fa=function(){SessionStorage&&SessionStorage.removeItem(b.B())};b.aa=function(a){var b="",d=new XMLHttpRequest;d.open("GET",a,!1);d.send(null);200===d.status&&(b=d.responseText);
-                                        return b};b.B=function(){return String.fromCharCode(95)+String.fromCharCode(80)+String.fromCharCode(107)};b.W=function(a){v.g(a,"event cannot be null");var c=b.M;try{var d=JSON.parse(a.data);c.type=d.cause;c.message=d.message;c.status=d.status}catch(f){c=b.M}c.source="server";console.log(JSON.stringify(c));return new StreamdataError(c.type,c.message,c.status,c.source,!0)};b.K=function(a){return!a||0===a.length}}
-                                        StreamdataEventSource.prototype={sa:function(a){v.g(a,"listener cannot be null");this.G.add(a);return this},qa:function(a){v.g(a,"listener cannot be null");this.A.add(a);return this},pa:function(a){v.g(a,"listener cannot be null");this.w.add(a);return this},ta:function(a){v.g(a,"listener cannot be null");this.H.add(a);return this},ra:function(a){v.g(a,"listener cannot be null");this.D.add(a);return this},na:function(a){v.g(a,"listener cannot be null");this.G.remove(a);return this},la:function(a){v.g(a,
-                                          "listener cannot be null");this.A.remove(a);return this},ka:function(a){v.g(a,"listener cannot be null");this.w.remove(a);return this},oa:function(a){v.g(a,"listener cannot be null");this.H.remove(a);return this},ma:function(a){v.g(a,"listener cannot be null");this.D.remove(a);return this},ja:function(){return this.l}};function StreamdataError(a,d,b,e,c){this.o=e;this.P=a;this.J=d;this.ia=c||!1;this.N=b;h.a(this,"source",this.o);h.a(this,"type",this.P);h.a(this,"message",this.J);h.a(this,"status",this.N)}StreamdataError.prototype={isFatal:function(){return this.ia},isServer:function(){return"server"==this.o},isClient:function(){return"client"==this.o},getMessage:function(){return this.J},getStatus:function(){return this.N},getType:function(){return this.P}};var streamdataio=new function(){this.sessionStore=!1};h.a(streamdataio,"Logger",m);h.a(m,"DEBUG",m.R);h.a(m,"INFO",m.S);h.a(m,"WARN",m.T);h.a(m,"ERROR",m.ERROR);h.a(m,"setLevel",m.ua);h.a(m,"debug",m.debug);h.a(m,"info",m.info);h.a(m,"warn",m.warn);h.a(m,"error",m.error);
-                                        h.a(streamdataio,"createEventSource",function(a,d){v.g(a,"url cannot be null");d=d||[];0!=a.lastIndexOf("http://",0)&&0!=a.lastIndexOf("https://",0)&&(a="http://"+a,m.warn("url has no default protocol defined. Add http:// as a default protocol."));return new StreamdataEventSource(a,d)});h.a(StreamdataError.prototype,"isFatal",StreamdataError.prototype.isFatal);h.a(StreamdataError.prototype,"isServer",StreamdataError.prototype.isServer);h.a(StreamdataError.prototype,"isClient",StreamdataError.prototype.isClient);
-                                        h.a(StreamdataError.prototype,"getMessage",StreamdataError.prototype.getMessage);h.a(StreamdataError.prototype,"getStatus",StreamdataError.prototype.getStatus);h.a(StreamdataError.prototype,"getType",StreamdataError.prototype.getType);h.a(StreamdataEventSource.prototype,"open",StreamdataEventSource.prototype.connect);h.a(StreamdataEventSource.prototype,"onOpen",StreamdataEventSource.prototype.sa);h.a(StreamdataEventSource.prototype,"onError",StreamdataEventSource.prototype.qa);
-                                        h.a(StreamdataEventSource.prototype,"onData",StreamdataEventSource.prototype.pa);h.a(StreamdataEventSource.prototype,"onPatch",StreamdataEventSource.prototype.ta);h.a(StreamdataEventSource.prototype,"onMonitor",StreamdataEventSource.prototype.ra);h.a(StreamdataEventSource.prototype,"offOpen",StreamdataEventSource.prototype.na);h.a(StreamdataEventSource.prototype,"offError",StreamdataEventSource.prototype.la);h.a(StreamdataEventSource.prototype,"offData",StreamdataEventSource.prototype.ka);
-                                        h.a(StreamdataEventSource.prototype,"offPatch",StreamdataEventSource.prototype.oa);h.a(StreamdataEventSource.prototype,"offMonitor",StreamdataEventSource.prototype.ma);h.a(StreamdataEventSource.prototype,"isConnected",StreamdataEventSource.prototype.ja);
-                                        /* END INCLUDE STEAMDATA.IO */
+/*
+   * EventSource polyfill version 0.9.7
+   * Supported by sc AmvTek srl
+   * :email: devel@amvtek.com
+ */
+var EventSourcePolyfill = function (global) {
+
+    if (global.EventSource && !global._eventSourceImportPrefix){
+        return;
+    }
+
+    var evsImportName = (global._eventSourceImportPrefix||'')+"EventSource";
+
+    var EventSource = function (url, options) {
+
+        if (!url || typeof url != 'string') {
+            throw new SyntaxError('Not enough arguments');
+        }
+
+        this.URL = url;
+        this.setOptions(options);
+        var evs = this;
+        setTimeout(function(){evs.poll()}, 0);
+    };
+
+    EventSource.prototype = {
+
+        CONNECTING: 0,
+
+        OPEN: 1,
+
+        CLOSED: 2,
+
+        defaultOptions: {
+
+            loggingEnabled: false,
+
+            loggingPrefix: "eventsource",
+
+            interval: 500, // milliseconds
+
+            bufferSizeLimit: 256*1024, // bytes
+
+            silentTimeout: 300000, // milliseconds
+
+            getArgs:{
+                'evs_buffer_size_limit': 256*1024
+            },
+
+            xhrHeaders:{
+                'Accept': 'text/event-stream',
+                'Cache-Control': 'no-cache',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        },
+
+        setOptions: function(options){
+
+            var defaults = this.defaultOptions;
+            var option;
+
+            // set all default options...
+            for (option in defaults){
+
+                if ( defaults.hasOwnProperty(option) ){
+                    this[option] = defaults[option];
+                }
+            }
+
+            // override with what is in options
+            for (option in options){
+
+                if (option in defaults && options.hasOwnProperty(option)){
+                    this[option] = options[option];
+                }
+            }
+
+            // if getArgs option is enabled
+            // ensure evs_buffer_size_limit corresponds to bufferSizeLimit
+            if (this.getArgs && this.bufferSizeLimit) {
+
+                this.getArgs['evs_buffer_size_limit'] = this.bufferSizeLimit;
+            }
+
+            // if console is not available, force loggingEnabled to false
+            if (typeof console === "undefined" || typeof console.log === "undefined") {
+
+                this.loggingEnabled = false;
+            }
+        },
+
+        log: function(message) {
+
+            if (this.loggingEnabled) {
+
+                console.log("[" + this.loggingPrefix +"]:" + message)
+            }
+        },
+
+        poll: function() {
+
+            try {
+
+                if (this.readyState == this.CLOSED) {
+                    return;
+                }
+
+                this.cleanup();
+                this.readyState = this.CONNECTING;
+                this.cursor = 0;
+                this.cache = '';
+                this._xhr = new this.XHR(this);
+                this.resetNoActivityTimer();
+
+            }
+            catch (e) {
+
+                // in an attempt to silence the errors
+                this.log('There were errors inside the pool try-catch');
+                this.dispatchEvent('error', { type: 'error', data: e.message });
+            }
+        },
+
+        pollAgain: function (interval) {
+
+            // schedule poll to be called after interval milliseconds
+            var evs = this;
+            evs.readyState = evs.CONNECTING;
+            evs.dispatchEvent('error', {
+                type: 'error',
+                data: "Reconnecting "
+            });
+            this._pollTimer = setTimeout(function(){evs.poll()}, interval||0);
+        },
 
 
-                                        /**********************************************************************************************/
-                                        /* Début de l'application */
-                                        var UI = require('ui');
-                                        var Vector2 = require('vector2');
+        cleanup: function() {
+
+            this.log('evs cleaning up')
+
+            if (this._pollTimer){
+                clearInterval(this._pollTimer);
+                this._pollTimer = null;
+            }
+
+            if (this._noActivityTimer){
+                clearInterval(this._noActivityTimer);
+                this._noActivityTimer = null;
+            }
+
+            if (this._xhr){
+                this._xhr.abort();
+                this._xhr = null;
+            }
+        },
+
+        resetNoActivityTimer: function(){
+
+            if (this.silentTimeout){
+
+                if (this._noActivityTimer){
+                    clearInterval(this._noActivityTimer);
+                }
+                var evs = this;
+                this._noActivityTimer = setTimeout(
+                        function(){ evs.log('Timeout! silentTImeout:'+evs.silentTimeout); evs.pollAgain(); },
+                        this.silentTimeout
+                        );
+            }
+        },
+
+        close: function () {
+
+            this.readyState = this.CLOSED;
+            this.log('Closing connection. readyState: '+this.readyState);
+            this.cleanup();
+        },
+
+        _onxhrdata: function() {
+
+            var request = this._xhr;
+
+            if (request.isReady() && !request.hasError() ) {
+                // reset the timer, as we have activity
+                this.resetNoActivityTimer();
+
+                // move this EventSource to OPEN state...
+                if (this.readyState == this.CONNECTING) {
+                    this.readyState = this.OPEN;
+                    this.dispatchEvent('open', { type: 'open' });
+                }
+
+                var buffer = request.getBuffer();
+
+                if (buffer.length > this.bufferSizeLimit) {
+                    this.log('buffer.length > this.bufferSizeLimit');
+                    this.pollAgain();
+                }
+
+                if (this.cursor == 0 && buffer.length > 0){
+
+                    // skip byte order mark \uFEFF character if it starts the stream
+                    if (buffer.substring(0,1) == '\uFEFF'){
+                        this.cursor = 1;
+                    }
+                }
+
+                var lastMessageIndex = this.lastMessageIndex(buffer);
+                if (lastMessageIndex[0] >= this.cursor){
+
+                    var newcursor = lastMessageIndex[1];
+                    var toparse = buffer.substring(this.cursor, newcursor);
+                    this.parseStream(toparse);
+                    this.cursor = newcursor;
+                }
+
+                // if request is finished, reopen the connection
+                if (request.isDone()) {
+                    this.log('request.isDone(). reopening the connection');
+                    this.pollAgain(this.interval);
+                }
+            }
+            else if (this.readyState !== this.CLOSED) {
+
+                this.log('this.readyState !== this.CLOSED');
+                this.pollAgain(this.interval);
+
+                //MV: Unsure why an error was previously dispatched
+            }
+        },
+
+        parseStream: function(chunk) {
+
+            // normalize line separators (\r\n,\r,\n) to \n
+            // remove white spaces that may precede \n
+            chunk = this.cache + this.normalizeToLF(chunk);
+
+            var events = chunk.split('\n\n');
+
+            var i, j, eventType, datas, line, retry;
+
+            for (i=0; i < (events.length - 1); i++) {
+
+                eventType = 'message';
+                datas = [];
+                parts = events[i].split('\n');
+
+                for (j=0; j < parts.length; j++) {
+
+                    line = this.trimWhiteSpace(parts[j]);
+
+                    if (line.indexOf('event') == 0) {
+
+                        eventType = line.replace(/event:?\s*/, '');
+                    }
+                    else if (line.indexOf('retry') == 0) {
+
+                        retry = parseInt(line.replace(/retry:?\s*/, ''));
+                        if(!isNaN(retry)) {
+                            this.interval = retry;
+                        }
+                    }
+                    else if (line.indexOf('data') == 0) {
+
+                        datas.push(line.replace(/data:?\s*/, ''));
+                    }
+                    else if (line.indexOf('id:') == 0) {
+
+                        this.lastEventId = line.replace(/id:?\s*/, '');
+                    }
+                    else if (line.indexOf('id') == 0) { // this resets the id
+
+                        this.lastEventId = null;
+                    }
+                }
+
+                if (datas.length) {
+                    // dispatch a new event
+                    var event = new MessageEvent(eventType, datas.join('\n'), window.location.origin, this.lastEventId);
+                    this.dispatchEvent(eventType, event);
+                }
+            }
+
+            this.cache = events[events.length - 1];
+        },
+
+        dispatchEvent: function (type, event) {
+            var handlers = this['_' + type + 'Handlers'];
+
+            if (handlers) {
+
+                for (var i = 0; i < handlers.length; i++) {
+                    handlers[i].call(this, event);
+                }
+            }
+
+            if (this['on' + type]) {
+                this['on' + type].call(this, event);
+            }
+
+        },
+
+        addEventListener: function (type, handler) {
+            if (!this['_' + type + 'Handlers']) {
+                this['_' + type + 'Handlers'] = [];
+            }
+
+            this['_' + type + 'Handlers'].push(handler);
+        },
+
+        removeEventListener: function (type, handler) {
+            var handlers = this['_' + type + 'Handlers'];
+            if (!handlers) {
+                return;
+            }
+            for (var i = handlers.length - 1; i >= 0; --i) {
+                if (handlers[i] === handler) {
+                    handlers.splice(i, 1);
+                    break;
+                }
+            }
+        },
+
+        _pollTimer: null,
+
+        _noactivityTimer: null,
+
+        _xhr: null,
+
+        lastEventId: null,
+
+        cache: '',
+
+        cursor: 0,
+
+        onerror: null,
+
+        onmessage: null,
+
+        onopen: null,
+
+        readyState: 0,
+
+        // ===================================================================
+        // helpers functions
+        // those are attached to prototype to ease reuse and testing...
+
+        urlWithParams: function (baseURL, params) {
+
+            var encodedArgs = [];
+
+            if (params){
+
+                var key, urlarg;
+                var urlize = encodeURIComponent;
+
+                for (key in params){
+                    if (params.hasOwnProperty(key)) {
+                        urlarg = urlize(key)+'='+urlize(params[key]);
+                        encodedArgs.push(urlarg);
+                    }
+                }
+            }
+
+            if (encodedArgs.length > 0){
+
+                if (baseURL.indexOf('?') == -1)
+                    return baseURL + '?' + encodedArgs.join('&');
+                return baseURL + '&' + encodedArgs.join('&');
+            }
+            return baseURL;
+        },
+
+        lastMessageIndex: function(text) {
+
+            var ln2 =text.lastIndexOf('\n\n');
+            var lr2 = text.lastIndexOf('\r\r');
+            var lrln2 = text.lastIndexOf('\r\n\r\n');
+
+            if (lrln2 > Math.max(ln2, lr2)) {
+                return [lrln2, lrln2+4];
+            }
+            return [Math.max(ln2, lr2), Math.max(ln2, lr2) + 2]
+        },
+
+        trimWhiteSpace: function(str) {
+            // to remove whitespaces left and right of string
+
+            var reTrim = /^(\s|\u00A0)+|(\s|\u00A0)+$/g;
+            return str.replace(reTrim, '');
+        },
+
+        normalizeToLF: function(str) {
+
+            // replace \r and \r\n with \n
+            return str.replace(/\r\n|\r/g, '\n');
+        }
+
+    };
+
+    if (!isOldIE()){
+
+        EventSource.isPolyfill = "XHR";
+
+        // EventSource will send request using XMLHttpRequest
+        EventSource.prototype.XHR = function(evs) {
+
+            request = new XMLHttpRequest();
+            this._request = request;
+            evs._xhr = this;
+
+            // set handlers
+            request.onreadystatechange = function(){
+                if (request.readyState > 1 && evs.readyState != evs.CLOSED) {
+                    if (request.status == 200 || (request.status>=300 && request.status<400)){
+                        evs._onxhrdata();
+                    }
+                    else {
+                        request._failed = true;
+                        evs.readyState = evs.CLOSED;
+                        evs.dispatchEvent('error', {
+                            type: 'error',
+                            data: "The server responded with "+request.status
+                        });
+                        evs.close();
+                    }
+                }
+            };
+
+            request.onprogress = function () {
+            };
+
+            request.open('GET', evs.urlWithParams(evs.URL, evs.getArgs), true);
+
+            var headers = evs.xhrHeaders; // maybe null
+            for (var header in headers) {
+                if (headers.hasOwnProperty(header)){
+                    request.setRequestHeader(header, headers[header]);
+                }
+            }
+            if (evs.lastEventId) {
+                request.setRequestHeader('Last-Event-Id', evs.lastEventId);
+            }
+
+            request.send();
+        };
+
+        EventSource.prototype.XHR.prototype = {
+
+            useXDomainRequest: false,
+
+            _request: null,
+
+            _failed: false, // true if we have had errors...
+
+            isReady: function() {
+
+
+                return this._request.readyState >= 2;
+            },
+
+            isDone: function() {
+
+                return (this._request.readyState == 4);
+            },
+
+            hasError: function() {
+
+                return (this._failed || (this._request.status >= 400));
+            },
+
+            getBuffer: function() {
+
+                var rv = '';
+                try {
+                    rv = this._request.responseText || '';
+                }
+                catch (e){}
+                return rv;
+            },
+
+            abort: function() {
+
+                if ( this._request ) {
+                    this._request.abort();
+                }
+            }
+        };
+    }
+    else {
+
+    EventSource.isPolyfill = "IE_8-9";
+
+        // patch EventSource defaultOptions
+        var defaults = EventSource.prototype.defaultOptions;
+        defaults.xhrHeaders = null; // no headers will be sent
+        defaults.getArgs['evs_preamble'] = 2048 + 8;
+
+        // EventSource will send request using Internet Explorer XDomainRequest
+        EventSource.prototype.XHR = function(evs) {
+
+            request = new XDomainRequest();
+            this._request = request;
+
+            // set handlers
+            request.onprogress = function(){
+                request._ready = true;
+                evs._onxhrdata();
+            };
+
+            request.onload = function(){
+                this._loaded = true;
+                evs._onxhrdata();
+            };
+
+            request.onerror = function(){
+                this._failed = true;
+                evs.readyState = evs.CLOSED;
+                evs.dispatchEvent('error', {
+                    type: 'error',
+                    data: "XDomainRequest error"
+                });
+            };
+
+            request.ontimeout = function(){
+                this._failed = true;
+                evs.readyState = evs.CLOSED;
+                evs.dispatchEvent('error', {
+                    type: 'error',
+                    data: "XDomainRequest timed out"
+                });
+            };
+
+            // XDomainRequest does not allow setting custom headers
+            // If EventSource has enabled the use of GET arguments
+            // we add parameters to URL so that server can adapt the stream...
+            var reqGetArgs = {};
+            if (evs.getArgs) {
+
+                // copy evs.getArgs in reqGetArgs
+                var defaultArgs = evs.getArgs;
+                    for (var key in defaultArgs) {
+                        if (defaultArgs.hasOwnProperty(key)){
+                            reqGetArgs[key] = defaultArgs[key];
+                        }
+                    }
+                if (evs.lastEventId){
+                    reqGetArgs['evs_last_event_id'] = evs.lastEventId;
+                }
+            }
+            // send the request
+
+            request.open('GET', evs.urlWithParams(evs.URL,reqGetArgs));
+            request.send();
+        };
+
+        EventSource.prototype.XHR.prototype = {
+
+            useXDomainRequest: true,
+
+            _request: null,
+
+            _ready: false, // true when progress events are dispatched
+
+            _loaded: false, // true when request has been loaded
+
+            _failed: false, // true if when request is in error
+
+            isReady: function() {
+
+                return this._request._ready;
+            },
+
+            isDone: function() {
+
+                return this._request._loaded;
+            },
+
+            hasError: function() {
+
+                return this._request._failed;
+            },
+
+            getBuffer: function() {
+
+                var rv = '';
+                try {
+                    rv = this._request.responseText || '';
+                }
+                catch (e){}
+                return rv;
+            },
+
+            abort: function() {
+
+                if ( this._request){
+                    this._request.abort();
+                }
+            }
+        };
+    }
+
+    function MessageEvent(type, data, origin, lastEventId) {
+
+        this.bubbles = false;
+        this.cancelBubble = false;
+        this.cancelable = false;
+        this.data = data || null;
+        this.origin = origin || '';
+        this.lastEventId = lastEventId || '';
+        this.type = type || 'message';
+    }
+
+    function isOldIE () {
+
+        //return true if we are in IE8 or IE9
+        return (window.XDomainRequest && (window.XMLHttpRequest && new XMLHttpRequest().responseType === undefined)) ? true : false;
+    }
+
+    global[evsImportName] = EventSource;
+
+    return EventSource;
+}
+
+/*
+CryptoJS v3.1.2
+code.google.com/p/crypto-js
+(c) 2009-2013 by Jeff Mott. All rights reserved.
+code.google.com/p/crypto-js/wiki/License
+*/
+/**
+ * CryptoJS core components.
+ */
+var CryptoJS = CryptoJS || (function (Math, undefined) {
+    /**
+     * CryptoJS namespace.
+     */
+    var C = {};
+
+    /**
+     * Library namespace.
+     */
+    var C_lib = C.lib = {};
+
+    /**
+     * Base object for prototypal inheritance.
+     */
+    var Base = C_lib.Base = (function () {
+        function F() {}
+
+        return {
+            /**
+             * Creates a new object that inherits from this object.
+             *
+             * @param {Object} overrides Properties to copy into the new object.
+             *
+             * @return {Object} The new object.
+             *
+             * @static
+             *
+             * @example
+             *
+             *     var MyType = CryptoJS.lib.Base.extend({
+             *         field: 'value',
+             *
+             *         method: function () {
+             *         }
+             *     });
+             */
+            extend: function (overrides) {
+                // Spawn
+                F.prototype = this;
+                var subtype = new F();
+
+                // Augment
+                if (overrides) {
+                    subtype.mixIn(overrides);
+                }
+
+                // Create default initializer
+                if (!subtype.hasOwnProperty('init')) {
+                    subtype.init = function () {
+                        subtype.$super.init.apply(this, arguments);
+                    };
+                }
+
+                // Initializer's prototype is the subtype object
+                subtype.init.prototype = subtype;
+
+                // Reference supertype
+                subtype.$super = this;
+
+                return subtype;
+            },
+
+            /**
+             * Extends this object and runs the init method.
+             * Arguments to create() will be passed to init().
+             *
+             * @return {Object} The new object.
+             *
+             * @static
+             *
+             * @example
+             *
+             *     var instance = MyType.create();
+             */
+            create: function () {
+                var instance = this.extend();
+                instance.init.apply(instance, arguments);
+
+                return instance;
+            },
+
+            /**
+             * Initializes a newly created object.
+             * Override this method to add some logic when your objects are created.
+             *
+             * @example
+             *
+             *     var MyType = CryptoJS.lib.Base.extend({
+             *         init: function () {
+             *             // ...
+             *         }
+             *     });
+             */
+            init: function () {
+            },
+
+            /**
+             * Copies properties into this object.
+             *
+             * @param {Object} properties The properties to mix in.
+             *
+             * @example
+             *
+             *     MyType.mixIn({
+             *         field: 'value'
+             *     });
+             */
+            mixIn: function (properties) {
+                for (var propertyName in properties) {
+                    if (properties.hasOwnProperty(propertyName)) {
+                        this[propertyName] = properties[propertyName];
+                    }
+                }
+
+                // IE won't copy toString using the loop above
+                if (properties.hasOwnProperty('toString')) {
+                    this.toString = properties.toString;
+                }
+            },
+
+            /**
+             * Creates a copy of this object.
+             *
+             * @return {Object} The clone.
+             *
+             * @example
+             *
+             *     var clone = instance.clone();
+             */
+            clone: function () {
+                return this.init.prototype.extend(this);
+            }
+        };
+    }());
+
+    /**
+     * An array of 32-bit words.
+     *
+     * @property {Array} words The array of 32-bit words.
+     * @property {number} sigBytes The number of significant bytes in this word array.
+     */
+    var WordArray = C_lib.WordArray = Base.extend({
+        /**
+         * Initializes a newly created word array.
+         *
+         * @param {Array} words (Optional) An array of 32-bit words.
+         * @param {number} sigBytes (Optional) The number of significant bytes in the words.
+         *
+         * @example
+         *
+         *     var wordArray = CryptoJS.lib.WordArray.create();
+         *     var wordArray = CryptoJS.lib.WordArray.create([0x00010203, 0x04050607]);
+         *     var wordArray = CryptoJS.lib.WordArray.create([0x00010203, 0x04050607], 6);
+         */
+        init: function (words, sigBytes) {
+            words = this.words = words || [];
+
+            if (sigBytes != undefined) {
+                this.sigBytes = sigBytes;
+            } else {
+                this.sigBytes = words.length * 4;
+            }
+        },
+
+        /**
+         * Converts this word array to a string.
+         *
+         * @param {Encoder} encoder (Optional) The encoding strategy to use. Default: CryptoJS.enc.Hex
+         *
+         * @return {string} The stringified word array.
+         *
+         * @example
+         *
+         *     var string = wordArray + '';
+         *     var string = wordArray.toString();
+         *     var string = wordArray.toString(CryptoJS.enc.Utf8);
+         */
+        toString: function (encoder) {
+            return (encoder || Hex).stringify(this);
+        },
+
+        /**
+         * Concatenates a word array to this word array.
+         *
+         * @param {WordArray} wordArray The word array to append.
+         *
+         * @return {WordArray} This word array.
+         *
+         * @example
+         *
+         *     wordArray1.concat(wordArray2);
+         */
+        concat: function (wordArray) {
+            // Shortcuts
+            var thisWords = this.words;
+            var thatWords = wordArray.words;
+            var thisSigBytes = this.sigBytes;
+            var thatSigBytes = wordArray.sigBytes;
+
+            // Clamp excess bits
+            this.clamp();
+
+            // Concat
+            if (thisSigBytes % 4) {
+                // Copy one byte at a time
+                for (var i = 0; i < thatSigBytes; i++) {
+                    var thatByte = (thatWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+                    thisWords[(thisSigBytes + i) >>> 2] |= thatByte << (24 - ((thisSigBytes + i) % 4) * 8);
+                }
+            } else if (thatWords.length > 0xffff) {
+                // Copy one word at a time
+                for (var i = 0; i < thatSigBytes; i += 4) {
+                    thisWords[(thisSigBytes + i) >>> 2] = thatWords[i >>> 2];
+                }
+            } else {
+                // Copy all words at once
+                thisWords.push.apply(thisWords, thatWords);
+            }
+            this.sigBytes += thatSigBytes;
+
+            // Chainable
+            return this;
+        },
+
+        /**
+         * Removes insignificant bits.
+         *
+         * @example
+         *
+         *     wordArray.clamp();
+         */
+        clamp: function () {
+            // Shortcuts
+            var words = this.words;
+            var sigBytes = this.sigBytes;
+
+            // Clamp
+            words[sigBytes >>> 2] &= 0xffffffff << (32 - (sigBytes % 4) * 8);
+            words.length = Math.ceil(sigBytes / 4);
+        },
+
+        /**
+         * Creates a copy of this word array.
+         *
+         * @return {WordArray} The clone.
+         *
+         * @example
+         *
+         *     var clone = wordArray.clone();
+         */
+        clone: function () {
+            var clone = Base.clone.call(this);
+            clone.words = this.words.slice(0);
+
+            return clone;
+        },
+
+        /**
+         * Creates a word array filled with random bytes.
+         *
+         * @param {number} nBytes The number of random bytes to generate.
+         *
+         * @return {WordArray} The random word array.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var wordArray = CryptoJS.lib.WordArray.random(16);
+         */
+        random: function (nBytes) {
+            var words = [];
+            for (var i = 0; i < nBytes; i += 4) {
+                words.push((Math.random() * 0x100000000) | 0);
+            }
+
+            return new WordArray.init(words, nBytes);
+        }
+    });
+
+    /**
+     * Encoder namespace.
+     */
+    var C_enc = C.enc = {};
+
+    /**
+     * Hex encoding strategy.
+     */
+    var Hex = C_enc.Hex = {
+        /**
+         * Converts a word array to a hex string.
+         *
+         * @param {WordArray} wordArray The word array.
+         *
+         * @return {string} The hex string.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var hexString = CryptoJS.enc.Hex.stringify(wordArray);
+         */
+        stringify: function (wordArray) {
+            // Shortcuts
+            var words = wordArray.words;
+            var sigBytes = wordArray.sigBytes;
+
+            // Convert
+            var hexChars = [];
+            for (var i = 0; i < sigBytes; i++) {
+                var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+                hexChars.push((bite >>> 4).toString(16));
+                hexChars.push((bite & 0x0f).toString(16));
+            }
+
+            return hexChars.join('');
+        },
+
+        /**
+         * Converts a hex string to a word array.
+         *
+         * @param {string} hexStr The hex string.
+         *
+         * @return {WordArray} The word array.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var wordArray = CryptoJS.enc.Hex.parse(hexString);
+         */
+        parse: function (hexStr) {
+            // Shortcut
+            var hexStrLength = hexStr.length;
+
+            // Convert
+            var words = [];
+            for (var i = 0; i < hexStrLength; i += 2) {
+                words[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);
+            }
+
+            return new WordArray.init(words, hexStrLength / 2);
+        }
+    };
+
+    /**
+     * Latin1 encoding strategy.
+     */
+    var Latin1 = C_enc.Latin1 = {
+        /**
+         * Converts a word array to a Latin1 string.
+         *
+         * @param {WordArray} wordArray The word array.
+         *
+         * @return {string} The Latin1 string.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var latin1String = CryptoJS.enc.Latin1.stringify(wordArray);
+         */
+        stringify: function (wordArray) {
+            // Shortcuts
+            var words = wordArray.words;
+            var sigBytes = wordArray.sigBytes;
+
+            // Convert
+            var latin1Chars = [];
+            for (var i = 0; i < sigBytes; i++) {
+                var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+                latin1Chars.push(String.fromCharCode(bite));
+            }
+
+            return latin1Chars.join('');
+        },
+
+        /**
+         * Converts a Latin1 string to a word array.
+         *
+         * @param {string} latin1Str The Latin1 string.
+         *
+         * @return {WordArray} The word array.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var wordArray = CryptoJS.enc.Latin1.parse(latin1String);
+         */
+        parse: function (latin1Str) {
+            // Shortcut
+            var latin1StrLength = latin1Str.length;
+
+            // Convert
+            var words = [];
+            for (var i = 0; i < latin1StrLength; i++) {
+                words[i >>> 2] |= (latin1Str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);
+            }
+
+            return new WordArray.init(words, latin1StrLength);
+        }
+    };
+
+    /**
+     * UTF-8 encoding strategy.
+     */
+    var Utf8 = C_enc.Utf8 = {
+        /**
+         * Converts a word array to a UTF-8 string.
+         *
+         * @param {WordArray} wordArray The word array.
+         *
+         * @return {string} The UTF-8 string.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var utf8String = CryptoJS.enc.Utf8.stringify(wordArray);
+         */
+        stringify: function (wordArray) {
+            try {
+                return decodeURIComponent(escape(Latin1.stringify(wordArray)));
+            } catch (e) {
+                throw new Error('Malformed UTF-8 data');
+            }
+        },
+
+        /**
+         * Converts a UTF-8 string to a word array.
+         *
+         * @param {string} utf8Str The UTF-8 string.
+         *
+         * @return {WordArray} The word array.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var wordArray = CryptoJS.enc.Utf8.parse(utf8String);
+         */
+        parse: function (utf8Str) {
+            return Latin1.parse(unescape(encodeURIComponent(utf8Str)));
+        }
+    };
+
+    /**
+     * Abstract buffered block algorithm template.
+     *
+     * The property blockSize must be implemented in a concrete subtype.
+     *
+     * @property {number} _minBufferSize The number of blocks that should be kept unprocessed in the buffer. Default: 0
+     */
+    var BufferedBlockAlgorithm = C_lib.BufferedBlockAlgorithm = Base.extend({
+        /**
+         * Resets this block algorithm's data buffer to its initial state.
+         *
+         * @example
+         *
+         *     bufferedBlockAlgorithm.reset();
+         */
+        reset: function () {
+            // Initial values
+            this._data = new WordArray.init();
+            this._nDataBytes = 0;
+        },
+
+        /**
+         * Adds new data to this block algorithm's buffer.
+         *
+         * @param {WordArray|string} data The data to append. Strings are converted to a WordArray using UTF-8.
+         *
+         * @example
+         *
+         *     bufferedBlockAlgorithm._append('data');
+         *     bufferedBlockAlgorithm._append(wordArray);
+         */
+        _append: function (data) {
+            // Convert string to WordArray, else assume WordArray already
+            if (typeof data == 'string') {
+                data = Utf8.parse(data);
+            }
+
+            // Append
+            this._data.concat(data);
+            this._nDataBytes += data.sigBytes;
+        },
+
+        /**
+         * Processes available data blocks.
+         *
+         * This method invokes _doProcessBlock(offset), which must be implemented by a concrete subtype.
+         *
+         * @param {boolean} doFlush Whether all blocks and partial blocks should be processed.
+         *
+         * @return {WordArray} The processed data.
+         *
+         * @example
+         *
+         *     var processedData = bufferedBlockAlgorithm._process();
+         *     var processedData = bufferedBlockAlgorithm._process(!!'flush');
+         */
+        _process: function (doFlush) {
+            // Shortcuts
+            var data = this._data;
+            var dataWords = data.words;
+            var dataSigBytes = data.sigBytes;
+            var blockSize = this.blockSize;
+            var blockSizeBytes = blockSize * 4;
+
+            // Count blocks ready
+            var nBlocksReady = dataSigBytes / blockSizeBytes;
+            if (doFlush) {
+                // Round up to include partial blocks
+                nBlocksReady = Math.ceil(nBlocksReady);
+            } else {
+                // Round down to include only full blocks,
+                // less the number of blocks that must remain in the buffer
+                nBlocksReady = Math.max((nBlocksReady | 0) - this._minBufferSize, 0);
+            }
+
+            // Count words ready
+            var nWordsReady = nBlocksReady * blockSize;
+
+            // Count bytes ready
+            var nBytesReady = Math.min(nWordsReady * 4, dataSigBytes);
+
+            // Process blocks
+            if (nWordsReady) {
+                for (var offset = 0; offset < nWordsReady; offset += blockSize) {
+                    // Perform concrete-algorithm logic
+                    this._doProcessBlock(dataWords, offset);
+                }
+
+                // Remove processed words
+                var processedWords = dataWords.splice(0, nWordsReady);
+                data.sigBytes -= nBytesReady;
+            }
+
+            // Return processed words
+            return new WordArray.init(processedWords, nBytesReady);
+        },
+
+        /**
+         * Creates a copy of this object.
+         *
+         * @return {Object} The clone.
+         *
+         * @example
+         *
+         *     var clone = bufferedBlockAlgorithm.clone();
+         */
+        clone: function () {
+            var clone = Base.clone.call(this);
+            clone._data = this._data.clone();
+
+            return clone;
+        },
+
+        _minBufferSize: 0
+    });
+
+    /**
+     * Abstract hasher template.
+     *
+     * @property {number} blockSize The number of 32-bit words this hasher operates on. Default: 16 (512 bits)
+     */
+    var Hasher = C_lib.Hasher = BufferedBlockAlgorithm.extend({
+        /**
+         * Configuration options.
+         */
+        cfg: Base.extend(),
+
+        /**
+         * Initializes a newly created hasher.
+         *
+         * @param {Object} cfg (Optional) The configuration options to use for this hash computation.
+         *
+         * @example
+         *
+         *     var hasher = CryptoJS.algo.SHA256.create();
+         */
+        init: function (cfg) {
+            // Apply config defaults
+            this.cfg = this.cfg.extend(cfg);
+
+            // Set initial values
+            this.reset();
+        },
+
+        /**
+         * Resets this hasher to its initial state.
+         *
+         * @example
+         *
+         *     hasher.reset();
+         */
+        reset: function () {
+            // Reset data buffer
+            BufferedBlockAlgorithm.reset.call(this);
+
+            // Perform concrete-hasher logic
+            this._doReset();
+        },
+
+        /**
+         * Updates this hasher with a message.
+         *
+         * @param {WordArray|string} messageUpdate The message to append.
+         *
+         * @return {Hasher} This hasher.
+         *
+         * @example
+         *
+         *     hasher.update('message');
+         *     hasher.update(wordArray);
+         */
+        update: function (messageUpdate) {
+            // Append
+            this._append(messageUpdate);
+
+            // Update the hash
+            this._process();
+
+            // Chainable
+            return this;
+        },
+
+        /**
+         * Finalizes the hash computation.
+         * Note that the finalize operation is effectively a destructive, read-once operation.
+         *
+         * @param {WordArray|string} messageUpdate (Optional) A final message update.
+         *
+         * @return {WordArray} The hash.
+         *
+         * @example
+         *
+         *     var hash = hasher.finalize();
+         *     var hash = hasher.finalize('message');
+         *     var hash = hasher.finalize(wordArray);
+         */
+        finalize: function (messageUpdate) {
+            // Final message update
+            if (messageUpdate) {
+                this._append(messageUpdate);
+            }
+
+            // Perform concrete-hasher logic
+            var hash = this._doFinalize();
+
+            return hash;
+        },
+
+        blockSize: 512/32,
+
+        /**
+         * Creates a shortcut function to a hasher's object interface.
+         *
+         * @param {Hasher} hasher The hasher to create a helper for.
+         *
+         * @return {Function} The shortcut function.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var SHA256 = CryptoJS.lib.Hasher._createHelper(CryptoJS.algo.SHA256);
+         */
+        _createHelper: function (hasher) {
+            return function (message, cfg) {
+                return new hasher.init(cfg).finalize(message);
+            };
+        },
+
+        /**
+         * Creates a shortcut function to the HMAC's object interface.
+         *
+         * @param {Hasher} hasher The hasher to use in this HMAC helper.
+         *
+         * @return {Function} The shortcut function.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var HmacSHA256 = CryptoJS.lib.Hasher._createHmacHelper(CryptoJS.algo.SHA256);
+         */
+        _createHmacHelper: function (hasher) {
+            return function (message, key) {
+                return new C_algo.HMAC.init(hasher, key).finalize(message);
+            };
+        }
+    });
+
+    /**
+     * Algorithm namespace.
+     */
+    var C_algo = C.algo = {};
+
+    return C;
+}(Math));
+
+/*
+CryptoJS v3.1.2
+code.google.com/p/crypto-js
+(c) 2009-2013 by Jeff Mott. All rights reserved.
+code.google.com/p/crypto-js/wiki/License
+*/
+(function (undefined) {
+    // Shortcuts
+    var C = CryptoJS;
+    var C_lib = C.lib;
+    var Base = C_lib.Base;
+    var X32WordArray = C_lib.WordArray;
+
+    /**
+     * x64 namespace.
+     */
+    var C_x64 = C.x64 = {};
+
+    /**
+     * A 64-bit word.
+     */
+    var X64Word = C_x64.Word = Base.extend({
+        /**
+         * Initializes a newly created 64-bit word.
+         *
+         * @param {number} high The high 32 bits.
+         * @param {number} low The low 32 bits.
+         *
+         * @example
+         *
+         *     var x64Word = CryptoJS.x64.Word.create(0x00010203, 0x04050607);
+         */
+        init: function (high, low) {
+            this.high = high;
+            this.low = low;
+        }
+
+        /**
+         * Bitwise NOTs this word.
+         *
+         * @return {X64Word} A new x64-Word object after negating.
+         *
+         * @example
+         *
+         *     var negated = x64Word.not();
+         */
+        // not: function () {
+            // var high = ~this.high;
+            // var low = ~this.low;
+
+            // return X64Word.create(high, low);
+        // },
+
+        /**
+         * Bitwise ANDs this word with the passed word.
+         *
+         * @param {X64Word} word The x64-Word to AND with this word.
+         *
+         * @return {X64Word} A new x64-Word object after ANDing.
+         *
+         * @example
+         *
+         *     var anded = x64Word.and(anotherX64Word);
+         */
+        // and: function (word) {
+            // var high = this.high & word.high;
+            // var low = this.low & word.low;
+
+            // return X64Word.create(high, low);
+        // },
+
+        /**
+         * Bitwise ORs this word with the passed word.
+         *
+         * @param {X64Word} word The x64-Word to OR with this word.
+         *
+         * @return {X64Word} A new x64-Word object after ORing.
+         *
+         * @example
+         *
+         *     var ored = x64Word.or(anotherX64Word);
+         */
+        // or: function (word) {
+            // var high = this.high | word.high;
+            // var low = this.low | word.low;
+
+            // return X64Word.create(high, low);
+        // },
+
+        /**
+         * Bitwise XORs this word with the passed word.
+         *
+         * @param {X64Word} word The x64-Word to XOR with this word.
+         *
+         * @return {X64Word} A new x64-Word object after XORing.
+         *
+         * @example
+         *
+         *     var xored = x64Word.xor(anotherX64Word);
+         */
+        // xor: function (word) {
+            // var high = this.high ^ word.high;
+            // var low = this.low ^ word.low;
+
+            // return X64Word.create(high, low);
+        // },
+
+        /**
+         * Shifts this word n bits to the left.
+         *
+         * @param {number} n The number of bits to shift.
+         *
+         * @return {X64Word} A new x64-Word object after shifting.
+         *
+         * @example
+         *
+         *     var shifted = x64Word.shiftL(25);
+         */
+        // shiftL: function (n) {
+            // if (n < 32) {
+                // var high = (this.high << n) | (this.low >>> (32 - n));
+                // var low = this.low << n;
+            // } else {
+                // var high = this.low << (n - 32);
+                // var low = 0;
+            // }
+
+            // return X64Word.create(high, low);
+        // },
+
+        /**
+         * Shifts this word n bits to the right.
+         *
+         * @param {number} n The number of bits to shift.
+         *
+         * @return {X64Word} A new x64-Word object after shifting.
+         *
+         * @example
+         *
+         *     var shifted = x64Word.shiftR(7);
+         */
+        // shiftR: function (n) {
+            // if (n < 32) {
+                // var low = (this.low >>> n) | (this.high << (32 - n));
+                // var high = this.high >>> n;
+            // } else {
+                // var low = this.high >>> (n - 32);
+                // var high = 0;
+            // }
+
+            // return X64Word.create(high, low);
+        // },
+
+        /**
+         * Rotates this word n bits to the left.
+         *
+         * @param {number} n The number of bits to rotate.
+         *
+         * @return {X64Word} A new x64-Word object after rotating.
+         *
+         * @example
+         *
+         *     var rotated = x64Word.rotL(25);
+         */
+        // rotL: function (n) {
+            // return this.shiftL(n).or(this.shiftR(64 - n));
+        // },
+
+        /**
+         * Rotates this word n bits to the right.
+         *
+         * @param {number} n The number of bits to rotate.
+         *
+         * @return {X64Word} A new x64-Word object after rotating.
+         *
+         * @example
+         *
+         *     var rotated = x64Word.rotR(7);
+         */
+        // rotR: function (n) {
+            // return this.shiftR(n).or(this.shiftL(64 - n));
+        // },
+
+        /**
+         * Adds this word with the passed word.
+         *
+         * @param {X64Word} word The x64-Word to add with this word.
+         *
+         * @return {X64Word} A new x64-Word object after adding.
+         *
+         * @example
+         *
+         *     var added = x64Word.add(anotherX64Word);
+         */
+        // add: function (word) {
+            // var low = (this.low + word.low) | 0;
+            // var carry = (low >>> 0) < (this.low >>> 0) ? 1 : 0;
+            // var high = (this.high + word.high + carry) | 0;
+
+            // return X64Word.create(high, low);
+        // }
+    });
+
+    /**
+     * An array of 64-bit words.
+     *
+     * @property {Array} words The array of CryptoJS.x64.Word objects.
+     * @property {number} sigBytes The number of significant bytes in this word array.
+     */
+    var X64WordArray = C_x64.WordArray = Base.extend({
+        /**
+         * Initializes a newly created word array.
+         *
+         * @param {Array} words (Optional) An array of CryptoJS.x64.Word objects.
+         * @param {number} sigBytes (Optional) The number of significant bytes in the words.
+         *
+         * @example
+         *
+         *     var wordArray = CryptoJS.x64.WordArray.create();
+         *
+         *     var wordArray = CryptoJS.x64.WordArray.create([
+         *         CryptoJS.x64.Word.create(0x00010203, 0x04050607),
+         *         CryptoJS.x64.Word.create(0x18191a1b, 0x1c1d1e1f)
+         *     ]);
+         *
+         *     var wordArray = CryptoJS.x64.WordArray.create([
+         *         CryptoJS.x64.Word.create(0x00010203, 0x04050607),
+         *         CryptoJS.x64.Word.create(0x18191a1b, 0x1c1d1e1f)
+         *     ], 10);
+         */
+        init: function (words, sigBytes) {
+            words = this.words = words || [];
+
+            if (sigBytes != undefined) {
+                this.sigBytes = sigBytes;
+            } else {
+                this.sigBytes = words.length * 8;
+            }
+        },
+
+        /**
+         * Converts this 64-bit word array to a 32-bit word array.
+         *
+         * @return {CryptoJS.lib.WordArray} This word array's data as a 32-bit word array.
+         *
+         * @example
+         *
+         *     var x32WordArray = x64WordArray.toX32();
+         */
+        toX32: function () {
+            // Shortcuts
+            var x64Words = this.words;
+            var x64WordsLength = x64Words.length;
+
+            // Convert
+            var x32Words = [];
+            for (var i = 0; i < x64WordsLength; i++) {
+                var x64Word = x64Words[i];
+                x32Words.push(x64Word.high);
+                x32Words.push(x64Word.low);
+            }
+
+            return X32WordArray.create(x32Words, this.sigBytes);
+        },
+
+        /**
+         * Creates a copy of this word array.
+         *
+         * @return {X64WordArray} The clone.
+         *
+         * @example
+         *
+         *     var clone = x64WordArray.clone();
+         */
+        clone: function () {
+            var clone = Base.clone.call(this);
+
+            // Clone "words" array
+            var words = clone.words = this.words.slice(0);
+
+            // Clone each X64Word object
+            var wordsLength = words.length;
+            for (var i = 0; i < wordsLength; i++) {
+                words[i] = words[i].clone();
+            }
+
+            return clone;
+        }
+    });
+}());
+
+/*
+CryptoJS v3.1.2
+code.google.com/p/crypto-js
+(c) 2009-2013 by Jeff Mott. All rights reserved.
+code.google.com/p/crypto-js/wiki/License
+*/
+(function () {
+    // Shortcuts
+    var C = CryptoJS;
+    var C_lib = C.lib;
+    var Base = C_lib.Base;
+    var C_enc = C.enc;
+    var Utf8 = C_enc.Utf8;
+    var C_algo = C.algo;
+
+    /**
+     * HMAC algorithm.
+     */
+    var HMAC = C_algo.HMAC = Base.extend({
+        /**
+         * Initializes a newly created HMAC.
+         *
+         * @param {Hasher} hasher The hash algorithm to use.
+         * @param {WordArray|string} key The secret key.
+         *
+         * @example
+         *
+         *     var hmacHasher = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, key);
+         */
+        init: function (hasher, key) {
+            // Init hasher
+            hasher = this._hasher = new hasher.init();
+
+            // Convert string to WordArray, else assume WordArray already
+            if (typeof key == 'string') {
+                key = Utf8.parse(key);
+            }
+
+            // Shortcuts
+            var hasherBlockSize = hasher.blockSize;
+            var hasherBlockSizeBytes = hasherBlockSize * 4;
+
+            // Allow arbitrary length keys
+            if (key.sigBytes > hasherBlockSizeBytes) {
+                key = hasher.finalize(key);
+            }
+
+            // Clamp excess bits
+            key.clamp();
+
+            // Clone key for inner and outer pads
+            var oKey = this._oKey = key.clone();
+            var iKey = this._iKey = key.clone();
+
+            // Shortcuts
+            var oKeyWords = oKey.words;
+            var iKeyWords = iKey.words;
+
+            // XOR keys with pad constants
+            for (var i = 0; i < hasherBlockSize; i++) {
+                oKeyWords[i] ^= 0x5c5c5c5c;
+                iKeyWords[i] ^= 0x36363636;
+            }
+            oKey.sigBytes = iKey.sigBytes = hasherBlockSizeBytes;
+
+            // Set initial values
+            this.reset();
+        },
+
+        /**
+         * Resets this HMAC to its initial state.
+         *
+         * @example
+         *
+         *     hmacHasher.reset();
+         */
+        reset: function () {
+            // Shortcut
+            var hasher = this._hasher;
+
+            // Reset
+            hasher.reset();
+            hasher.update(this._iKey);
+        },
+
+        /**
+         * Updates this HMAC with a message.
+         *
+         * @param {WordArray|string} messageUpdate The message to append.
+         *
+         * @return {HMAC} This HMAC instance.
+         *
+         * @example
+         *
+         *     hmacHasher.update('message');
+         *     hmacHasher.update(wordArray);
+         */
+        update: function (messageUpdate) {
+            this._hasher.update(messageUpdate);
+
+            // Chainable
+            return this;
+        },
+
+        /**
+         * Finalizes the HMAC computation.
+         * Note that the finalize operation is effectively a destructive, read-once operation.
+         *
+         * @param {WordArray|string} messageUpdate (Optional) A final message update.
+         *
+         * @return {WordArray} The HMAC.
+         *
+         * @example
+         *
+         *     var hmac = hmacHasher.finalize();
+         *     var hmac = hmacHasher.finalize('message');
+         *     var hmac = hmacHasher.finalize(wordArray);
+         */
+        finalize: function (messageUpdate) {
+            // Shortcut
+            var hasher = this._hasher;
+
+            // Compute HMAC
+            var innerHash = hasher.finalize(messageUpdate);
+            hasher.reset();
+            var hmac = hasher.finalize(this._oKey.clone().concat(innerHash));
+
+            return hmac;
+        }
+    });
+}());
+
+/*
+CryptoJS v3.1.2
+code.google.com/p/crypto-js
+(c) 2009-2013 by Jeff Mott. All rights reserved.
+code.google.com/p/crypto-js/wiki/License
+*/
+(function () {
+    // Shortcuts
+    var C = CryptoJS;
+    var C_lib = C.lib;
+    var Hasher = C_lib.Hasher;
+    var C_x64 = C.x64;
+    var X64Word = C_x64.Word;
+    var X64WordArray = C_x64.WordArray;
+    var C_algo = C.algo;
+
+    function X64Word_create() {
+        return X64Word.create.apply(X64Word, arguments);
+    }
+
+    // Constants
+    var K = [
+        X64Word_create(0x428a2f98, 0xd728ae22), X64Word_create(0x71374491, 0x23ef65cd),
+        X64Word_create(0xb5c0fbcf, 0xec4d3b2f), X64Word_create(0xe9b5dba5, 0x8189dbbc),
+        X64Word_create(0x3956c25b, 0xf348b538), X64Word_create(0x59f111f1, 0xb605d019),
+        X64Word_create(0x923f82a4, 0xaf194f9b), X64Word_create(0xab1c5ed5, 0xda6d8118),
+        X64Word_create(0xd807aa98, 0xa3030242), X64Word_create(0x12835b01, 0x45706fbe),
+        X64Word_create(0x243185be, 0x4ee4b28c), X64Word_create(0x550c7dc3, 0xd5ffb4e2),
+        X64Word_create(0x72be5d74, 0xf27b896f), X64Word_create(0x80deb1fe, 0x3b1696b1),
+        X64Word_create(0x9bdc06a7, 0x25c71235), X64Word_create(0xc19bf174, 0xcf692694),
+        X64Word_create(0xe49b69c1, 0x9ef14ad2), X64Word_create(0xefbe4786, 0x384f25e3),
+        X64Word_create(0x0fc19dc6, 0x8b8cd5b5), X64Word_create(0x240ca1cc, 0x77ac9c65),
+        X64Word_create(0x2de92c6f, 0x592b0275), X64Word_create(0x4a7484aa, 0x6ea6e483),
+        X64Word_create(0x5cb0a9dc, 0xbd41fbd4), X64Word_create(0x76f988da, 0x831153b5),
+        X64Word_create(0x983e5152, 0xee66dfab), X64Word_create(0xa831c66d, 0x2db43210),
+        X64Word_create(0xb00327c8, 0x98fb213f), X64Word_create(0xbf597fc7, 0xbeef0ee4),
+        X64Word_create(0xc6e00bf3, 0x3da88fc2), X64Word_create(0xd5a79147, 0x930aa725),
+        X64Word_create(0x06ca6351, 0xe003826f), X64Word_create(0x14292967, 0x0a0e6e70),
+        X64Word_create(0x27b70a85, 0x46d22ffc), X64Word_create(0x2e1b2138, 0x5c26c926),
+        X64Word_create(0x4d2c6dfc, 0x5ac42aed), X64Word_create(0x53380d13, 0x9d95b3df),
+        X64Word_create(0x650a7354, 0x8baf63de), X64Word_create(0x766a0abb, 0x3c77b2a8),
+        X64Word_create(0x81c2c92e, 0x47edaee6), X64Word_create(0x92722c85, 0x1482353b),
+        X64Word_create(0xa2bfe8a1, 0x4cf10364), X64Word_create(0xa81a664b, 0xbc423001),
+        X64Word_create(0xc24b8b70, 0xd0f89791), X64Word_create(0xc76c51a3, 0x0654be30),
+        X64Word_create(0xd192e819, 0xd6ef5218), X64Word_create(0xd6990624, 0x5565a910),
+        X64Word_create(0xf40e3585, 0x5771202a), X64Word_create(0x106aa070, 0x32bbd1b8),
+        X64Word_create(0x19a4c116, 0xb8d2d0c8), X64Word_create(0x1e376c08, 0x5141ab53),
+        X64Word_create(0x2748774c, 0xdf8eeb99), X64Word_create(0x34b0bcb5, 0xe19b48a8),
+        X64Word_create(0x391c0cb3, 0xc5c95a63), X64Word_create(0x4ed8aa4a, 0xe3418acb),
+        X64Word_create(0x5b9cca4f, 0x7763e373), X64Word_create(0x682e6ff3, 0xd6b2b8a3),
+        X64Word_create(0x748f82ee, 0x5defb2fc), X64Word_create(0x78a5636f, 0x43172f60),
+        X64Word_create(0x84c87814, 0xa1f0ab72), X64Word_create(0x8cc70208, 0x1a6439ec),
+        X64Word_create(0x90befffa, 0x23631e28), X64Word_create(0xa4506ceb, 0xde82bde9),
+        X64Word_create(0xbef9a3f7, 0xb2c67915), X64Word_create(0xc67178f2, 0xe372532b),
+        X64Word_create(0xca273ece, 0xea26619c), X64Word_create(0xd186b8c7, 0x21c0c207),
+        X64Word_create(0xeada7dd6, 0xcde0eb1e), X64Word_create(0xf57d4f7f, 0xee6ed178),
+        X64Word_create(0x06f067aa, 0x72176fba), X64Word_create(0x0a637dc5, 0xa2c898a6),
+        X64Word_create(0x113f9804, 0xbef90dae), X64Word_create(0x1b710b35, 0x131c471b),
+        X64Word_create(0x28db77f5, 0x23047d84), X64Word_create(0x32caab7b, 0x40c72493),
+        X64Word_create(0x3c9ebe0a, 0x15c9bebc), X64Word_create(0x431d67c4, 0x9c100d4c),
+        X64Word_create(0x4cc5d4be, 0xcb3e42b6), X64Word_create(0x597f299c, 0xfc657e2a),
+        X64Word_create(0x5fcb6fab, 0x3ad6faec), X64Word_create(0x6c44198c, 0x4a475817)
+    ];
+
+    // Reusable objects
+    var W = [];
+    (function () {
+        for (var i = 0; i < 80; i++) {
+            W[i] = X64Word_create();
+        }
+    }());
+
+    /**
+     * SHA-512 hash algorithm.
+     */
+    var SHA512 = C_algo.SHA512 = Hasher.extend({
+        _doReset: function () {
+            this._hash = new X64WordArray.init([
+                new X64Word.init(0x6a09e667, 0xf3bcc908), new X64Word.init(0xbb67ae85, 0x84caa73b),
+                new X64Word.init(0x3c6ef372, 0xfe94f82b), new X64Word.init(0xa54ff53a, 0x5f1d36f1),
+                new X64Word.init(0x510e527f, 0xade682d1), new X64Word.init(0x9b05688c, 0x2b3e6c1f),
+                new X64Word.init(0x1f83d9ab, 0xfb41bd6b), new X64Word.init(0x5be0cd19, 0x137e2179)
+            ]);
+        },
+
+        _doProcessBlock: function (M, offset) {
+            // Shortcuts
+            var H = this._hash.words;
+
+            var H0 = H[0];
+            var H1 = H[1];
+            var H2 = H[2];
+            var H3 = H[3];
+            var H4 = H[4];
+            var H5 = H[5];
+            var H6 = H[6];
+            var H7 = H[7];
+
+            var H0h = H0.high;
+            var H0l = H0.low;
+            var H1h = H1.high;
+            var H1l = H1.low;
+            var H2h = H2.high;
+            var H2l = H2.low;
+            var H3h = H3.high;
+            var H3l = H3.low;
+            var H4h = H4.high;
+            var H4l = H4.low;
+            var H5h = H5.high;
+            var H5l = H5.low;
+            var H6h = H6.high;
+            var H6l = H6.low;
+            var H7h = H7.high;
+            var H7l = H7.low;
+
+            // Working variables
+            var ah = H0h;
+            var al = H0l;
+            var bh = H1h;
+            var bl = H1l;
+            var ch = H2h;
+            var cl = H2l;
+            var dh = H3h;
+            var dl = H3l;
+            var eh = H4h;
+            var el = H4l;
+            var fh = H5h;
+            var fl = H5l;
+            var gh = H6h;
+            var gl = H6l;
+            var hh = H7h;
+            var hl = H7l;
+
+            // Rounds
+            for (var i = 0; i < 80; i++) {
+                // Shortcut
+                var Wi = W[i];
+
+                // Extend message
+                if (i < 16) {
+                    var Wih = Wi.high = M[offset + i * 2]     | 0;
+                    var Wil = Wi.low  = M[offset + i * 2 + 1] | 0;
+                } else {
+                    // Gamma0
+                    var gamma0x  = W[i - 15];
+                    var gamma0xh = gamma0x.high;
+                    var gamma0xl = gamma0x.low;
+                    var gamma0h  = ((gamma0xh >>> 1) | (gamma0xl << 31)) ^ ((gamma0xh >>> 8) | (gamma0xl << 24)) ^ (gamma0xh >>> 7);
+                    var gamma0l  = ((gamma0xl >>> 1) | (gamma0xh << 31)) ^ ((gamma0xl >>> 8) | (gamma0xh << 24)) ^ ((gamma0xl >>> 7) | (gamma0xh << 25));
+
+                    // Gamma1
+                    var gamma1x  = W[i - 2];
+                    var gamma1xh = gamma1x.high;
+                    var gamma1xl = gamma1x.low;
+                    var gamma1h  = ((gamma1xh >>> 19) | (gamma1xl << 13)) ^ ((gamma1xh << 3) | (gamma1xl >>> 29)) ^ (gamma1xh >>> 6);
+                    var gamma1l  = ((gamma1xl >>> 19) | (gamma1xh << 13)) ^ ((gamma1xl << 3) | (gamma1xh >>> 29)) ^ ((gamma1xl >>> 6) | (gamma1xh << 26));
+
+                    // W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16]
+                    var Wi7  = W[i - 7];
+                    var Wi7h = Wi7.high;
+                    var Wi7l = Wi7.low;
+
+                    var Wi16  = W[i - 16];
+                    var Wi16h = Wi16.high;
+                    var Wi16l = Wi16.low;
+
+                    var Wil = gamma0l + Wi7l;
+                    var Wih = gamma0h + Wi7h + ((Wil >>> 0) < (gamma0l >>> 0) ? 1 : 0);
+                    var Wil = Wil + gamma1l;
+                    var Wih = Wih + gamma1h + ((Wil >>> 0) < (gamma1l >>> 0) ? 1 : 0);
+                    var Wil = Wil + Wi16l;
+                    var Wih = Wih + Wi16h + ((Wil >>> 0) < (Wi16l >>> 0) ? 1 : 0);
+
+                    Wi.high = Wih;
+                    Wi.low  = Wil;
+                }
+
+                var chh  = (eh & fh) ^ (~eh & gh);
+                var chl  = (el & fl) ^ (~el & gl);
+                var majh = (ah & bh) ^ (ah & ch) ^ (bh & ch);
+                var majl = (al & bl) ^ (al & cl) ^ (bl & cl);
+
+                var sigma0h = ((ah >>> 28) | (al << 4))  ^ ((ah << 30)  | (al >>> 2)) ^ ((ah << 25) | (al >>> 7));
+                var sigma0l = ((al >>> 28) | (ah << 4))  ^ ((al << 30)  | (ah >>> 2)) ^ ((al << 25) | (ah >>> 7));
+                var sigma1h = ((eh >>> 14) | (el << 18)) ^ ((eh >>> 18) | (el << 14)) ^ ((eh << 23) | (el >>> 9));
+                var sigma1l = ((el >>> 14) | (eh << 18)) ^ ((el >>> 18) | (eh << 14)) ^ ((el << 23) | (eh >>> 9));
+
+                // t1 = h + sigma1 + ch + K[i] + W[i]
+                var Ki  = K[i];
+                var Kih = Ki.high;
+                var Kil = Ki.low;
+
+                var t1l = hl + sigma1l;
+                var t1h = hh + sigma1h + ((t1l >>> 0) < (hl >>> 0) ? 1 : 0);
+                var t1l = t1l + chl;
+                var t1h = t1h + chh + ((t1l >>> 0) < (chl >>> 0) ? 1 : 0);
+                var t1l = t1l + Kil;
+                var t1h = t1h + Kih + ((t1l >>> 0) < (Kil >>> 0) ? 1 : 0);
+                var t1l = t1l + Wil;
+                var t1h = t1h + Wih + ((t1l >>> 0) < (Wil >>> 0) ? 1 : 0);
+
+                // t2 = sigma0 + maj
+                var t2l = sigma0l + majl;
+                var t2h = sigma0h + majh + ((t2l >>> 0) < (sigma0l >>> 0) ? 1 : 0);
+
+                // Update working variables
+                hh = gh;
+                hl = gl;
+                gh = fh;
+                gl = fl;
+                fh = eh;
+                fl = el;
+                el = (dl + t1l) | 0;
+                eh = (dh + t1h + ((el >>> 0) < (dl >>> 0) ? 1 : 0)) | 0;
+                dh = ch;
+                dl = cl;
+                ch = bh;
+                cl = bl;
+                bh = ah;
+                bl = al;
+                al = (t1l + t2l) | 0;
+                ah = (t1h + t2h + ((al >>> 0) < (t1l >>> 0) ? 1 : 0)) | 0;
+            }
+
+            // Intermediate hash value
+            H0l = H0.low  = (H0l + al);
+            H0.high = (H0h + ah + ((H0l >>> 0) < (al >>> 0) ? 1 : 0));
+            H1l = H1.low  = (H1l + bl);
+            H1.high = (H1h + bh + ((H1l >>> 0) < (bl >>> 0) ? 1 : 0));
+            H2l = H2.low  = (H2l + cl);
+            H2.high = (H2h + ch + ((H2l >>> 0) < (cl >>> 0) ? 1 : 0));
+            H3l = H3.low  = (H3l + dl);
+            H3.high = (H3h + dh + ((H3l >>> 0) < (dl >>> 0) ? 1 : 0));
+            H4l = H4.low  = (H4l + el);
+            H4.high = (H4h + eh + ((H4l >>> 0) < (el >>> 0) ? 1 : 0));
+            H5l = H5.low  = (H5l + fl);
+            H5.high = (H5h + fh + ((H5l >>> 0) < (fl >>> 0) ? 1 : 0));
+            H6l = H6.low  = (H6l + gl);
+            H6.high = (H6h + gh + ((H6l >>> 0) < (gl >>> 0) ? 1 : 0));
+            H7l = H7.low  = (H7l + hl);
+            H7.high = (H7h + hh + ((H7l >>> 0) < (hl >>> 0) ? 1 : 0));
+        },
+
+        _doFinalize: function () {
+            // Shortcuts
+            var data = this._data;
+            var dataWords = data.words;
+
+            var nBitsTotal = this._nDataBytes * 8;
+            var nBitsLeft = data.sigBytes * 8;
+
+            // Add padding
+            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+            dataWords[(((nBitsLeft + 128) >>> 10) << 5) + 30] = Math.floor(nBitsTotal / 0x100000000);
+            dataWords[(((nBitsLeft + 128) >>> 10) << 5) + 31] = nBitsTotal;
+            data.sigBytes = dataWords.length * 4;
+
+            // Hash final blocks
+            this._process();
+
+            // Convert hash to 32-bit word array before returning
+            var hash = this._hash.toX32();
+
+            // Return final computed hash
+            return hash;
+        },
+
+        clone: function () {
+            var clone = Hasher.clone.call(this);
+            clone._hash = this._hash.clone();
+
+            return clone;
+        },
+
+        blockSize: 1024/32
+    });
+
+    /**
+     * Shortcut function to the hasher's object interface.
+     *
+     * @param {WordArray|string} message The message to hash.
+     *
+     * @return {WordArray} The hash.
+     *
+     * @static
+     *
+     * @example
+     *
+     *     var hash = CryptoJS.SHA512('message');
+     *     var hash = CryptoJS.SHA512(wordArray);
+     */
+    C.SHA512 = Hasher._createHelper(SHA512);
+
+    /**
+     * Shortcut function to the HMAC's object interface.
+     *
+     * @param {WordArray|string} message The message to hash.
+     * @param {WordArray|string} key The secret key.
+     *
+     * @return {WordArray} The HMAC.
+     *
+     * @static
+     *
+     * @example
+     *
+     *     var hmac = CryptoJS.HmacSHA512(message, key);
+     */
+    C.HmacSHA512 = Hasher._createHmacHelper(SHA512);
+}());
+
+/*
+CryptoJS v3.1.2
+code.google.com/p/crypto-js
+(c) 2009-2013 by Jeff Mott. All rights reserved.
+code.google.com/p/crypto-js/wiki/License
+*/
+(function () {
+    // Shortcuts
+    var C = CryptoJS;
+    var C_lib = C.lib;
+    var WordArray = C_lib.WordArray;
+    var C_enc = C.enc;
+
+    /**
+     * Base64 encoding strategy.
+     */
+    var Base64 = C_enc.Base64 = {
+        /**
+         * Converts a word array to a Base64 string.
+         *
+         * @param {WordArray} wordArray The word array.
+         *
+         * @return {string} The Base64 string.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var base64String = CryptoJS.enc.Base64.stringify(wordArray);
+         */
+        stringify: function (wordArray) {
+            // Shortcuts
+            var words = wordArray.words;
+            var sigBytes = wordArray.sigBytes;
+            var map = this._map;
+
+            // Clamp excess bits
+            wordArray.clamp();
+
+            // Convert
+            var base64Chars = [];
+            for (var i = 0; i < sigBytes; i += 3) {
+                var byte1 = (words[i >>> 2]       >>> (24 - (i % 4) * 8))       & 0xff;
+                var byte2 = (words[(i + 1) >>> 2] >>> (24 - ((i + 1) % 4) * 8)) & 0xff;
+                var byte3 = (words[(i + 2) >>> 2] >>> (24 - ((i + 2) % 4) * 8)) & 0xff;
+
+                var triplet = (byte1 << 16) | (byte2 << 8) | byte3;
+
+                for (var j = 0; (j < 4) && (i + j * 0.75 < sigBytes); j++) {
+                    base64Chars.push(map.charAt((triplet >>> (6 * (3 - j))) & 0x3f));
+                }
+            }
+
+            // Add padding
+            var paddingChar = map.charAt(64);
+            if (paddingChar) {
+                while (base64Chars.length % 4) {
+                    base64Chars.push(paddingChar);
+                }
+            }
+
+            return base64Chars.join('');
+        },
+
+        /**
+         * Converts a Base64 string to a word array.
+         *
+         * @param {string} base64Str The Base64 string.
+         *
+         * @return {WordArray} The word array.
+         *
+         * @static
+         *
+         * @example
+         *
+         *     var wordArray = CryptoJS.enc.Base64.parse(base64String);
+         */
+        parse: function (base64Str) {
+            // Shortcuts
+            var base64StrLength = base64Str.length;
+            var map = this._map;
+
+            // Ignore padding
+            var paddingChar = map.charAt(64);
+            if (paddingChar) {
+                var paddingIndex = base64Str.indexOf(paddingChar);
+                if (paddingIndex != -1) {
+                    base64StrLength = paddingIndex;
+                }
+            }
+
+            // Convert
+            var words = [];
+            var nBytes = 0;
+            for (var i = 0; i < base64StrLength; i++) {
+                if (i % 4) {
+                    var bits1 = map.indexOf(base64Str.charAt(i - 1)) << ((i % 4) * 2);
+                    var bits2 = map.indexOf(base64Str.charAt(i)) >>> (6 - (i % 4) * 2);
+                    words[nBytes >>> 2] |= (bits1 | bits2) << (24 - (nBytes % 4) * 8);
+                    nBytes++;
+                }
+            }
+
+            return WordArray.create(words, nBytes);
+        },
+
+        _map: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+    };
+}());
+
+var Exporter = (function() {
+  'use strict';
+
+  return {
+    /**
+     * @function
+     * Google Closure Compiler helpers (used only to make the minified file smaller)
+     * @param {string} publicPath
+     * @param {*} object
+     */ 
+    exportSymbol: function(owner, publicPath, object) {
+      var tokens = publicPath.split(".");
+      var target = owner;
+      for (var i = 0; i < tokens.length - 1; i++) {
+        target = target[tokens[i]];
+      }
+      this.exportProperty(target, tokens[tokens.length - 1], object);
+    },
+    
+    /**
+     * @function
+     * Google Closure Compiler helpers (used only to make the minified file smaller)
+     * @param {Object} owner
+     * @param {string} publicName
+     * @param {*} object
+     */
+    exportProperty: function(owner, publicName, object) {
+      owner[publicName] = object;
+    }
+    
+  };
+})();
+var Logger = (function () {
+  'use strict';
+
+  var console = window['console'];
+
+  var DEBUG = 3, INFO = 2, WARN = 1, ERROR = 0;
+  /**
+   * @private
+   * @memberOf Logger#
+   */
+  var level = INFO;
+
+  /**
+   * @private
+   * @memberOf Logger#
+   */
+  var _formatLog = function (pattern, args) {
+    return pattern.replace(/{(\d+)}/g, function (match, number) {
+      var replaced;
+      if (args[number] && typeof args[number] === 'object' && args[number] instanceof Error) {
+        try {
+          replaced = args[number]['message'];
+          if (args[number]['stack']) {
+            console.error(args[number]['stack']);
+          }
+        } catch (error) {
+          replaced = args[number];
+        }
+      } else if (args[number] && typeof args[number] === 'object') {
+        try {
+          if (args[number].toString !== Object.prototype.toString) {
+            replaced = args[number].toString();
+          } else {
+            replaced = JSON.stringify(args[number]);
+          }
+        } catch (error) {
+          replaced = args[number];
+        }
+      } else if (args[number] && typeof args[number] === 'function') {
+        replaced = 'function';
+      } else if (args[number]) {
+        replaced = args[number];
+      } else {
+        replaced = match;
+      }
+      var replacedString = '' + replaced;
+      return replacedString.substring(0, Math.min(500, replacedString.length));
+    });
+  };
+
+  /**
+   * @namespace
+   */
+  return {
+    /**
+     * @memberOf Logger#
+     * @constant {number}
+     */
+    DEBUG: DEBUG,
+    /**
+     * @memberOf Logger#
+     * @constant {number}
+     */
+    INFO: INFO,
+    /**
+     * @memberOf Logger#
+     * @constant {number}
+     */
+    WARN: WARN,
+    /**
+     * @memberOf Logger#
+     * @constant {number}
+     */
+    ERROR: ERROR,
+
+    /**
+     * @memberOf Logger#
+     * @param {number} newLevel
+     */
+    setLevel: function (newLevel) {
+      level = newLevel;
+    },
+    /**
+     * @memberOf Logger#
+     */
+    debug: function () {
+      if (level >= DEBUG && console && console.log) {
+        console.log(_formatLog(arguments[0], Array.prototype.slice.call(arguments, 1)));
+      }
+    },
+    /**
+     * @memberOf Logger#
+     */
+    info: function () {
+      if (level >= INFO && console && console.info) {
+        console.info(_formatLog(arguments[0], Array.prototype.slice.call(arguments, 1)));
+      }
+    },
+    /**
+     * @memberOf Logger#
+     */
+    warn: function () {
+      if (level >= WARN && console && console.warn) {
+        console.warn(_formatLog(arguments[0], Array.prototype.slice.call(arguments, 1)));
+      }
+    },
+    /**
+     * @memberOf Logger#
+     */
+    error: function () {
+      if (level >= ERROR && console && console.error) {
+        console.error(_formatLog(arguments[0], Array.prototype.slice.call(arguments, 1)));
+      }
+    }
+  };
+})();
+var SessionStorage = (function() {
+  'use strict';
+
+  try {
+    return window['sessionStorage'];
+  } catch(e) {
+    return undefined;
+  }
+})();
+
+var Preconditions = (function (Logger) {
+  'use strict';
+
+  return {
+    /**
+     * @memberOf Preconditions#
+     * check if the value is not null
+     * @param {*} value
+     * @param {string} message
+     */
+    checkNotNull: function (value, message) {
+      if (typeof value === 'undefined' || value === null) {
+        if (message) {
+          throw new Error(message);
+        } else {
+          throw new Error('value cannot be null');
+        }
+      }
+      return value;
+    },
+
+    /**
+     * @memberOf Preconditions#
+     * log deprecated warning
+     * @param {string} functionName
+     * @param {string} message
+     */
+    deprecated: function (functionName, message) {
+      this.checkNotNull(functionName, 'functionName cannot be null');
+      this.checkNotNull(message, 'message cannot be null');
+
+      Logger.warn("Deprecated: function '{0}' is deprecated because '{1}'.", functionName, message);
+
+    },
+
+    /**
+     * @memberOf Preconditions#
+     * check is the provided expression is true
+     * @param {*} expression
+     * @param {string} message
+     */
+    checkState: function (expression, message) {
+      if (!expression) {
+        if (message) {
+          throw new Error(message);
+        } else {
+          throw new Error('expression is not valid');
+        }
+      }
+    },
+
+    /**
+     * @memberOf Preconditions#
+     * check is the argument matches the expression
+     * @param {*} expression
+     * @param {string} message
+     */
+    checkArgument: function (expression, message) {
+      if (!expression) {
+        if (message) {
+          throw new Error(message);
+        } else {
+          throw new Error('expression is not valid');
+        }
+      }
+    }
+  };
+})(Logger);
+
+function Listeners(bind) {
+    Preconditions.checkNotNull(bind, "bind cannot be null");
+
+    this._bind      = bind;
+    this._listeners = [];
+}
+  
+Listeners.prototype = {
+    /**
+    * @memberOf Listeners#
+    */
+    fire: function() {
+        var listeners = this._listeners.slice(); // copy to prevent concurrent modifications
+        for(var i = 0, length = listeners.length; i < length; i++) {
+            try {
+                var listener = listeners[i];
+                if(listener) {
+                    listener.apply(this._bind, arguments);
+                }
+            } catch(error) {
+                Logger.error("Unable to forward event: {0}", error);
+            }
+        }
+    },
+    /**
+    * @memberOf Listeners#
+    * @param {Function} listener
+    */
+    add: function(listener) {
+        Preconditions.checkNotNull(listener, "listener cannot be null");
+        Preconditions.checkState(this._listeners.indexOf(listener) == -1, "listener already exists");
+        this._listeners.push(listener);
+    },
+    /**
+    * @memberOf Listeners#
+    * @param {Function} listener
+    */
+    remove: function(listener) {
+        Preconditions.checkNotNull(listener, "listener cannot be null");
+        var indexOf = this._listeners.indexOf(listener);
+        Preconditions.checkState(indexOf >= 0, "listener not exists");
+        this._listeners.splice(indexOf, 1);
+    }
+};
+
+function StreamdataEventSource(url, headers) {
+    Preconditions.checkNotNull(url, 'url cannot be null.');
+    headers = headers || [];
+
+    var self = this;
+    self.streamdataConfig = {
+                    'PROTOCOL': 'https://',
+                    'HOST': 'streamdata.motwin.net',
+                    'PORT': ''
+                    };
+    self.keyFile = "/streamdataio.json";
+
+    self._sse = null;
+    self._isConnected = false;
+    self._url = url;
+    self._openListeners      = new Listeners(self);
+    self._dataListeners      = new Listeners(self);
+    self._patchListeners     = new Listeners(self);
+    self._errorListeners     = new Listeners(self);
+    self._monitorListeners   = new Listeners(self);
+    self._auth = false;
+    self._headers = headers;
+    self._defaultErrorMessage = {
+        'type': 'UnknownError',
+        'status': 1000,
+        'message': 'An error occurs. Please check your console logs for more details.',
+        'source': 'server'
+    };
+
+    self.open = function() {
+        Preconditions.checkNotNull(self._url, 'url cannot be null');
+        self.close();
+        var decoratedUrl = self._decorate(self._url, self._headers);
+        
+        if (decoratedUrl) {
+            if(typeof EventSource === "undefined") {
+                console.log("EVS Polyfilled");
+                self._sse = new EventSourcePolyfill(decoratedUrl);
+            } else {
+                console.log("EVS not polyfilled");
+                self._sse = new EventSource(decoratedUrl);
+            }
+
+            console.log(self._sse);
+
+            self._sse.addEventListener('open', function (event) {
+                Logger.debug('SSE Stream Opened to ' + self._url + "event: " + JSON.stringify(event));
+                self._isConnected = true;
+                self._openListeners.fire();
+            });
+
+            self._sse.addEventListener('error', function (event) {
+                Logger.debug('Error with SSE at ' + event + ': closing the stream.');
+                self._sse.close();
+                self._isConnected = false;
+                self._errorListeners.fire(self._buildErrorMessage(event, true));
+            });
+
+            self._sse.addEventListener('data', function (event) {
+                Logger.debug('Received data:' + event.data);
+                self._dataListeners.fire(JSON.parse(event.data));
+            });
+
+            self._sse.addEventListener('patch', function (event) {
+                Logger.debug('Received patch:' + event.data);
+                self._patchListeners.fire(JSON.parse(event.data));
+            });
+
+            self._sse.addEventListener('monitor', function (event) {
+                Logger.debug('Received monitor:' + event.data);
+                self._monitorListeners.fire(JSON.parse(event.data));
+            });
+        }
+        return this;
+    };
+
+    self.close = function() {
+        if (self._isConnected && self._sse !== null) {
+            Logger.info('Closing the SSE Stream.');
+            self._sse.close();
+            self._isConnected = false;
+        }
+        return this;
+    };
+
+
+    /*
+    * Resolve build a 3 strings array containing key pair with
+    * [beacon , realpk, realPk]
+    * if keypair not found ['','',''] is returned
+    */
+    self._resolve = function() {
+        var Pk = null;
+
+        self._auth = false;
+
+        // 1 - check locally if configured into SessionStorage
+        var PkFromSessionStorage = self._getPkFromSessionStorage();
+        if (PkFromSessionStorage) {
+            try {
+                Pk = JSON.parse(PkFromSessionStorage);
+            } catch (error) {
+            }
+        }
+
+        if (! Pk){
+            // 2 - check remotely from file if not resolved yet
+            try {
+                var PkFromFile = self._getPkFromFile(self.keyFile);
+                if (PkFromFile) {
+                    Pk = JSON.parse(PkFromFile);
+                }
+            } catch (error) {
+            }
+        }
+
+        if (! Pk) {
+            // 3- check keypair from source code
+            if (!self.isEmpty(streamdataio.pk) && !self.isEmpty(streamdataio.Pk)){
+                Pk = {"Pk": "", "pk": ""};
+                Pk.pk = streamdataio.pk;
+                Pk.Pk = streamdataio.Pk;
+            }
+        }
+
+        return self._decrypt(Pk);
+    };
+
+    self._decrypt = function(Pk){
+        var Pks = ['','',''];
+
+        if (Pk) {
+            // a - decode bas64
+            try {
+                var words = CryptoJS.enc.Base64.parse(Pk.pk);
+                var decryptedPlainText = CryptoJS.enc.Utf8.stringify(words);
+
+                // 3 - if keypair: auth activated
+                if (decryptedPlainText.length == 72) {
+                    self._auth = true;
+                    self._setPkToSessionStorage(JSON.stringify(Pk));
+                    Pks = [decryptedPlainText.substring(0, 36), decryptedPlainText.substring(36), Pk.Pk];
+                }
+            } catch (error) {
+                self._removePkFromSessionStorage();
+            }
+        }
+
+        return Pks;
+    };
+
+    self._decorate = function(url, headers) {
+        Preconditions.checkNotNull(url, 'url cannot be null');
+        headers = headers || [];
+
+       // var parser = document.createElement('a');
+        //parser.href = url;
+
+        var queryParams = '';
+
+        // get http access crendentials if specified
+        var credentialsRegex = /\/\/(.*@)/g;
+        var matches = credentialsRegex.exec(url);
+        var htaccessCredentials = matches ? htaccessCredentials = matches[1] : "";
+        console.log("HEY");
+       // console.log(JSON.stringify(parser));
+       // console.log("Protocol : " + parser.protocol );
+       // console.log("Hostname : " + parser.hostname);
+       // console.log("Pathname : " + parser.pathname);
+       // console.log("href : " + parser.href);
+
+        var urlToEncode = url;
+        //var urlToEncode = parser.protocol + '//' + htaccessCredentials +  parser.hostname + ((parser.pathname.indexOf('/') == 0) ? '' : '/') + parser.pathname + parser.search;
+        var streamDataQueryParams = self._buildStreamDataQueryParams(urlToEncode, headers);
+
+        if (streamDataQueryParams.length > 0) {
+         // queryParams = ((parser.search.indexOf('?') === -1) ? '?' : '&' ) + streamDataQueryParams.join('&');
+         queryParams ="?" +streamDataQueryParams.join('&') ;
+        }
+
+        var streamdataUrl = self.streamdataConfig.PROTOCOL
+            + self.streamdataConfig.HOST + (self.isEmpty(self.streamdataConfig.PORT) ? '' : ':') + self.streamdataConfig.PORT
+            + '/' + urlToEncode + queryParams;
+
+        Logger.debug("converted url :" + streamdataUrl);
+
+        return streamdataUrl;
+
+    };
+
+    self._buildStreamDataQueryParams = function(url, headers) {
+      headers = headers || [];
+
+      var headersParams = self._buildHeadersAsQueryParams(headers);
+      //console.log("_buildStreamDataQueryParams: " + headers);
+      //console.log("_buildStreamDataQueryParams: " + headersParams);
+      var authParams = self._buildAuthQueryParams(url);
+
+      return headersParams.concat(authParams);
+    };
+
+    self._buildAuthQueryParams = function(url) {
+      var queryParams = [];
+
+      //  get keys
+      var k = self._resolve();
+
+      if (self._auth){
+            // 1 - create url to encode
+            var urlToEncode = url;
+
+            var X_AUTH_SD_PUBLIC_KEY  = 'X-Auth-Sd-Pk';
+            var X_AUTH_SD_SIGNATURE   = 'X-Auth-Sd-S';
+            var X_AUTH_SD_TIMESTAMP   = 'X-Auth-Sd-Ts';
+
+            // 2 - generate timestamp
+            var timestamp = '' + Date.now();
+
+            // 3 - build signature
+            var stringtosign = 'GET\n' +
+            timestamp + '\n' +
+            urlToEncode + '\n';
+
+            // 4 - sign
+
+            // 4 - a - the real signature
+            var wordSignature = CryptoJS.HmacSHA512(stringtosign, k[1]);
+            var signatureAsString = CryptoJS.enc.Base64.stringify(wordSignature);
+            var signatureAndPk = k[0] + signatureAsString;
+            var wordsignatureAndPk = CryptoJS.enc.Utf8.parse(signatureAndPk);
+            var signature = CryptoJS.enc.Base64.stringify(wordsignatureAndPk);
+
+            // 5 - create auth params
+            queryParams.push(X_AUTH_SD_PUBLIC_KEY + '=' + encodeURIComponent(k[2]));
+            queryParams.push(X_AUTH_SD_TIMESTAMP + '=' + encodeURIComponent(timestamp));
+            queryParams.push(X_AUTH_SD_SIGNATURE + '=' + encodeURIComponent(signature));
+
+        }
+
+        return queryParams;
+    };
+
+    self._buildHeadersAsQueryParams = function(headers) {
+      headers = headers || [];
+      //console.log("_buildHeadersAsQueryParams: " + headers);
+      return headers.map(function(item) {
+        return 'X-Sd-Header=' + encodeURIComponent(item);
+      });
+    };
+
+    /*
+    * returns Pk from SessionStorage or null if not found
+    */
+    self._getPkFromSessionStorage = function() {
+        if (SessionStorage && streamdataio.sessionStore) {
+            return SessionStorage.getItem(self._getPkKey());
+        }
+        return null;
+    };
+
+    /*
+    * sets Pk in SessionStorage.
+    */
+    self._setPkToSessionStorage = function(Pk) {
+        if (SessionStorage && streamdataio.sessionStore) {
+            SessionStorage.setItem(self._getPkKey(), Pk);
+        }
+    };
+
+    /*
+    * remove the key from session storage
+     */
+    self._removePkFromSessionStorage = function(){
+        if (SessionStorage) {
+            SessionStorage.removeItem(self._getPkKey());
+        }
+    };
+
+    /*
+    * returns Pk from file or null if file not found
+    */
+    self._getPkFromFile = function (source) {
+
+        var Pk = "";
+        var request = new XMLHttpRequest();
+        request.open('GET', source, false);  // `false` makes the Ajax request synchronous
+        request.send(null);
+
+        if (request.status === 200) {
+            Pk = request.responseText;
+        }
+
+        return Pk;
+
+    };
+
+    self._getPkKey = function () {
+        // hidden key used to store Pk in SessionStorage "_Pk" :
+        // "_" : 95
+        // "P" : 80
+        // "k" : 107
+        return String.fromCharCode(95)
+                + String.fromCharCode(80)
+                + String.fromCharCode(107);
+
+    };
+
+
+    self._buildErrorMessage = function (event, isFatal) {
+        Preconditions.checkNotNull(event, 'event cannot be null');
+
+
+        var err =  self._defaultErrorMessage;
+        try {
+            var exception = JSON.parse(event.data);
+
+            err.type = exception['cause'];
+            err.message = exception['message'];
+            err.status = exception['status'];
+
+        } catch (error) {
+            err= self._defaultErrorMessage;
+        }
+        err.source = 'server';
+
+        console.log(JSON.stringify(err));
+
+        return new StreamdataError(err.type, err.message, err.status, err.source,  isFatal);
+    };
+    
+    self.isEmpty =  function (str) {
+        return (!str || 0 === str.length);
+    };
+}
+
+StreamdataEventSource.prototype = {
+
+    onOpen: function(listener){
+        Preconditions.checkNotNull(listener, 'listener cannot be null');
+        this._openListeners.add(listener);
+        return this;
+    },
+
+    onError: function(listener){
+        Preconditions.checkNotNull(listener, 'listener cannot be null');
+        this._errorListeners.add(listener);
+        return this;
+    },
+
+    onData: function(listener){
+        Preconditions.checkNotNull(listener, 'listener cannot be null');
+        this._dataListeners.add(listener);
+        return this;
+    },
+
+    onPatch: function(listener){
+        Preconditions.checkNotNull(listener, 'listener cannot be null');
+        this._patchListeners.add(listener);
+        return this;
+    },
+
+    onMonitor: function(listener){
+        Preconditions.checkNotNull(listener, 'listener cannot be null');
+        this._monitorListeners.add(listener);
+        return this;
+    },
+
+    offOpen: function(listener){
+        Preconditions.checkNotNull(listener, 'listener cannot be null');
+        this._openListeners.remove(listener);
+        return this;
+    },
+
+    offError: function(listener){
+        Preconditions.checkNotNull(listener, 'listener cannot be null');
+        this._errorListeners.remove(listener);
+        return this;
+    },
+
+    offData: function(listener){
+        Preconditions.checkNotNull(listener, 'listener cannot be null');
+        this._dataListeners.remove(listener);
+        return this;
+    },
+
+    offPatch: function(listener){
+        Preconditions.checkNotNull(listener, 'listener cannot be null');
+        this._patchListeners.remove(listener);
+        return this;
+     },
+
+    offMonitor: function(listener){
+        Preconditions.checkNotNull(listener, 'listener cannot be null');
+        this._monitorListeners.remove(listener);
+        return this;
+    },
+
+    isConnected: function(){
+        return this._isConnected;
+    }
+
+};
+
+/**
+* @constructor
+* @param {string} source
+* @param {string} type
+* @param {string} message
+* @param {Object} error
+* @param {(boolean|undefined)} isFatal
+*/
+function StreamdataError(type, message, status, source, isFatal) {
+    this._source  = source;
+    this._type    = type;
+    this._message = message;
+    this._fatal   = isFatal || false;
+    this._status  = status;
+
+    Exporter.exportProperty(this, "source", this._source);
+    Exporter.exportProperty(this, "type", this._type);
+    Exporter.exportProperty(this, "message", this._message);
+    Exporter.exportProperty(this, "status", this._status);
+
+}
+  
+StreamdataError.prototype = {
+
+    /**
+    * @memberOf StreamdataError#
+    * @return {boolean} true if error is fatal.
+    */
+    isFatal: function() {
+        return this._fatal;
+    },
+    /**
+    * @memberOf StreamdataError#
+    * @return {boolean} true if error is from server side.
+    */
+    isServer: function() {
+        return this._source == "server";
+    },
+    /**
+    * @memberOf StreamdataError#
+    * @return {boolean} true if error is from client side.
+    */
+    isClient: function() {
+        return this._source == "client";
+    },
+    /**
+    * @memberOf StreamdataError#
+    * @return {string} the message that explains the cause of the error.
+    */
+    getMessage: function() {
+        return this._message;
+    },
+    /**
+     * @memberOf StreamdataError#
+     * @return {(Object|undefined)} the status value of the error object from the server (error object sent by the server) or from the client (Javascript exception thrown).
+     */
+    getStatus: function() {
+        return this._status;
+    },
+    /**
+     * @memberOf StreamdataError#
+     * @return {(Object|undefined)} the type value of the error object from the server (error object sent by the server) or from the client (Javascript exception thrown).
+     */
+    getType: function() {
+        return this._type;
+    }
+
+};
+
+
+/**
+* Streamdata.io JavaScript SDK
+*/
+
+/**
+* <p>Create a new instance of the StreamDataEventSource prototype.</p>
+*
+* <p>The StreamDataEventSource is the main entry point for establishing Server Sent Event connection to remote server.</p>
+*
+* @param {String} url The targeted REST URI is formatted as follow:
+* @param {Array} headers Any specific headers that have to be passed in the query:
+* <pre><code>
+* protocol://url(:port)(/localpath(?queryparameters))
+* </code></pre>
+*
+* @returns {StreamDataEventSource}
+*/
+//(function() {
+function createEventSource(url, headers) {
+    Preconditions.checkNotNull(url, 'url cannot be null');
+    headers = headers || [];
+
+    if( !(url.lastIndexOf('http://', 0) == 0)
+        &&
+        !(url.lastIndexOf('https://', 0) == 0)) {
+        // if no valid protocol typed in then add default (http://) : if no protocol defined,
+        // url is considered as relative.
+        url = 'http://' + url;
+        Logger.warn('url has no default protocol defined. Add http:// as a default protocol.');
+    }
+
+    return new StreamdataEventSource(url, headers);
+}
+
+function Streamdata() {
+    var self = this;
+    self.sessionStore = false;
+}
+
+/**
+ * @export
+ */
+var streamdataio = new Streamdata();
+
+// Logger exports
+Exporter.exportProperty(streamdataio, 'Logger', Logger);
+Exporter.exportProperty(Logger, 'DEBUG', Logger.DEBUG);
+Exporter.exportProperty(Logger, 'INFO', Logger.INFO);
+Exporter.exportProperty(Logger, 'WARN', Logger.WARN);
+Exporter.exportProperty(Logger, 'ERROR', Logger.ERROR);
+Exporter.exportProperty(Logger, 'setLevel', Logger.setLevel);
+Exporter.exportProperty(Logger, 'debug', Logger.debug);
+Exporter.exportProperty(Logger, 'info', Logger.info);
+Exporter.exportProperty(Logger, 'warn', Logger.warn);
+Exporter.exportProperty(Logger, 'error', Logger.error);
+
+// streamdataio static methods exports
+Exporter.exportProperty(streamdataio, 'createEventSource', createEventSource);
+
+// StreamdataError instance methods exports
+Exporter.exportProperty(StreamdataError.prototype, 'isFatal', StreamdataError.prototype.isFatal);
+Exporter.exportProperty(StreamdataError.prototype, 'isServer', StreamdataError.prototype.isServer);
+Exporter.exportProperty(StreamdataError.prototype, 'isClient', StreamdataError.prototype.isClient);
+Exporter.exportProperty(StreamdataError.prototype, 'getMessage', StreamdataError.prototype.getMessage);
+Exporter.exportProperty(StreamdataError.prototype, 'getStatus', StreamdataError.prototype.getStatus);
+Exporter.exportProperty(StreamdataError.prototype, 'getType', StreamdataError.prototype.getType);
+
+// StreamdataEventSource instance methods exports
+Exporter.exportProperty(StreamdataEventSource.prototype, 'open', StreamdataEventSource.prototype.connect);
+Exporter.exportProperty(StreamdataEventSource.prototype, 'onOpen', StreamdataEventSource.prototype.onOpen);
+Exporter.exportProperty(StreamdataEventSource.prototype, 'onError', StreamdataEventSource.prototype.onError);
+Exporter.exportProperty(StreamdataEventSource.prototype, 'onData', StreamdataEventSource.prototype.onData);
+Exporter.exportProperty(StreamdataEventSource.prototype, 'onPatch', StreamdataEventSource.prototype.onPatch);
+Exporter.exportProperty(StreamdataEventSource.prototype, 'onMonitor', StreamdataEventSource.prototype.onMonitor);
+
+Exporter.exportProperty(StreamdataEventSource.prototype, 'offOpen', StreamdataEventSource.prototype.offOpen);
+Exporter.exportProperty(StreamdataEventSource.prototype, 'offError', StreamdataEventSource.prototype.offError);
+Exporter.exportProperty(StreamdataEventSource.prototype, 'offData', StreamdataEventSource.prototype.offData);
+Exporter.exportProperty(StreamdataEventSource.prototype, 'offPatch', StreamdataEventSource.prototype.offPatch);
+Exporter.exportProperty(StreamdataEventSource.prototype, 'offMonitor', StreamdataEventSource.prototype.offMonitor);
+
+Exporter.exportProperty(StreamdataEventSource.prototype, 'isConnected', StreamdataEventSource.prototype.isConnected);/* END INCLUDE STEAMDATA.IO */
+
+
+/**********************************************************************************************/
+/* Début de l'application */
+var UI = require('ui');
+var Vector2 = require('vector2');
 
 // Import the Vibe object
 var Vibe = require('ui/vibe');
@@ -90,15 +3054,6 @@ var Vibe = require('ui/vibe');
  commercialView.body('We cache and push data from APIs\nVisit streamdata.io');
 
 
-/*
-var text = new UI.Text({ position: new Vector2(0, 0), size: new Vector2(144, 168) });
-text.text("Mon nouveau Body");
-
- commercialView.add(text);
- console.log("Mon body index : " + commercialView.index(text));
- */
-
-
  /* *********** State transition system *********** */
 
 // HOME | CURRENCY | COMMERCIAL | UNKNOWN
@@ -119,13 +3074,17 @@ commercialView.on('show', function() {
   state='COMMERCIAL';
 });
 
+  /* *********** Show the homepage *********** */
+
   mainView.show();
+
+  /* ***************************************** */
 
 /* *********** Streamdata.io Javascript SDK *********** */
 
   // Streamdata authentication
-  streamdataio.Pk = /* TODO : Paste your streamdata.io TOKEN here */;
-  streamdataio.pk = /* TODO : (optionnal) Paste your streamdata.io PRIVATE KEY here */;
+  streamdataio.Pk =  "OGUyNmE3YmEtZTljMy00NWViLWFlODQtMTdlMTY3ODEzNmE1" /* TODO : Paste your streamdata.io TOKEN here */;
+  streamdataio.pk = "OGE3NzU3ODUtNGRiOS00MWRkLThiMjMtM2M0ZTA5MzkzYjUzODk3YTZlNTItMmNhOC00NDBkLTljMzctZjU1ZmZkMmE0NWZm" /* TODO : (optionnal) Paste your streamdata.io PRIVATE KEY here */;
 
   // Visit http://streamdata.io/doc/#_security for further information about Streamdata.io authentication keys
 
@@ -210,10 +3169,6 @@ commercialView.on('show', function() {
    commercialView.show();
 });
 
-  /* *********** Show the homepage *********** */
-
-
-  /* ***************************************** */
 
 /*********************************************************
   Update values in the main menu,

@@ -1,10 +1,10 @@
 {
-  "uuid": "bbaacc76-7d02-4074-8c74-1e8dadc547dd",
+  "uuid": "30bd9c30-73c9-4841-9e50-c3e7d5aca6b1",
   "shortName": "Bitcoin",
-  "longName": "Bitcoin",
-  "companyName": "Motwin",
-  "versionCode": 1,
-  "versionLabel": "1.0",
+  "longName": "Bitcoin price index",
+  "companyName": "Streamdata.io",
+  "versionCode": 2,
+  "versionLabel": "1.1",
   "watchapp": {
     "watchface": false
   },
@@ -55,8 +55,6 @@
     ]
   },
   "targetPlatforms": [
-    "aplite",
-    "basalt"
-  ],
+    "aplite"  ],
   "sdkVersion": "3"
 }
