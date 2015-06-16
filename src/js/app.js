@@ -3083,8 +3083,8 @@ commercialView.on('show', function() {
 /* *********** Streamdata.io Javascript SDK *********** */
 
   // Streamdata authentication
-  streamdataio.Pk =  "OGUyNmE3YmEtZTljMy00NWViLWFlODQtMTdlMTY3ODEzNmE1" /* TODO : Paste your streamdata.io TOKEN here */;
-  streamdataio.pk = "OGE3NzU3ODUtNGRiOS00MWRkLThiMjMtM2M0ZTA5MzkzYjUzODk3YTZlNTItMmNhOC00NDBkLTljMzctZjU1ZmZkMmE0NWZm" /* TODO : (optionnal) Paste your streamdata.io PRIVATE KEY here */;
+  streamdataio.Pk =   /* TODO : Paste your streamdata.io TOKEN here */;
+  streamdataio.pk =  /* TODO : (optionnal) Paste your streamdata.io PRIVATE KEY here */;
 
   // Visit http://streamdata.io/doc/#_security for further information about Streamdata.io authentication keys
 
